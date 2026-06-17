@@ -72,7 +72,7 @@
             </div>
             <button onclick="toggleSettingsDrawer()" class="text-white/80 hover:text-white p-2 rounded-full bg-black/30 backdrop-blur-sm transition relative">
                 <i data-lucide="sliders" class="w-4 h-4"></i>
-                <span id="settings-alert-dot" class="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full hidden"></span>
+                <span id="settings-alert-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full hidden"></span>
             </button>
         </div>
 
@@ -104,7 +104,7 @@
                 Szene 1: Das Dilemma
             </span>
             <p id="caption-text" class="text-sm font-semibold leading-relaxed text-stone-100 tracking-wide">
-                Drücke unten auf "Starten", um Christians Video-Konzept abzuspielen.
+                Prüfe Audio-Dateien...
             </p>
         </div>
 
@@ -112,7 +112,7 @@
         <div class="px-4 pb-6 pt-3 bg-gradient-to-t from-black to-black/80 z-40 border-t border-white/5 flex justify-between items-center text-white">
             <div class="flex items-center space-x-1.5">
                 <i id="volume-indicator-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-stone-400"></i>
-                <span id="audio-type-badge" class="text-[9px] text-stone-400 font-black uppercase tracking-wider">PRÜFE AUDIO...</span>
+                <span id="audio-type-badge" class="text-[9px] text-stone-400 font-black uppercase tracking-wider">Lade Kiez-Stimmen...</span>
             </div>
             
             <button onclick="togglePlay()" class="bg-[#E3000F] text-white p-3.5 rounded-full border-2 border-white/10 shadow-lg hover:scale-105 active:scale-95 transition flex items-center justify-center">
@@ -120,13 +120,13 @@
             </button>
 
             <button onclick="toggleSettingsDrawer()" class="text-stone-400 hover:text-white flex items-center space-x-1">
-                <span class="text-[9px] font-black tracking-widest uppercase">AUDIO-SETUP</span>
+                <span class="text-[9px] font-black tracking-widest uppercase">STIMMEN-CHECK</span>
                 <i data-lucide="chevron-up" class="w-3 h-3"></i>
             </button>
         </div>
 
         <!-- SETTINGS SLIDE-UP DRAWER (Hidden by default, used for file uploads or fallback selection) -->
-        <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white">
+        <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white overflow-y-auto max-h-[85vh]">
             <div class="flex justify-between items-center mb-4">
                 <h4 class="font-black text-sm uppercase text-white tracking-widest flex items-center">
                     <i data-lucide="sliders" class="w-4 h-4 mr-1.5 text-[#E3000F]"></i>
@@ -142,15 +142,18 @@
                 <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest block mb-1">Sprach-Modus:</label>
                 <select id="audio-mode-selector" onchange="changeAudioMode()" class="w-full bg-stone-950 border border-stone-800 text-xs font-bold p-2.5 rounded-xl text-white">
                     <option value="auto">Automatische Erkennung (Empfohlen)</option>
-                    <option value="m4a">Nur Christians Stimme (.m4a)</option>
-                    <option value="speech">Nur Web-Vorlesestimme (Synthetisch)</option>
+                    <option value="m4a">Ausschließlich Christians m4a-Stimme</option>
+                    <option value="speech">Ausschließlich Roboter-Stimme (Synthetisch)</option>
                 </select>
             </div>
 
-            <p class="text-[10px] text-stone-400 leading-relaxed mb-4">
-                <strong>Status der lokalen Kiez-Aufnahmen:</strong><br>
-                Die App prüft automatisch, ob die Dateien <code class="text-white">Szene 1.m4a</code>, <code class="text-white">Szene 2.m4a</code>, etc. im selben Ordner liegen.
-            </p>
+            <!-- Live Diagnostic Logger (VERY IMPORTANT FOR CHRISTIAN) -->
+            <div class="mb-4 bg-stone-950 border border-stone-800 rounded-xl p-3">
+                <span class="text-[9px] font-black text-stone-400 uppercase tracking-widest block mb-1.5">Live-Server-Diagnose:</span>
+                <div id="diagnostic-log" class="text-[10px] font-mono space-y-1 text-stone-300 max-h-24 overflow-y-auto">
+                    <p class="text-stone-500">> Starte Kiez-Stimmen-Check...</p>
+                </div>
+            </div>
 
             <!-- File Upload Grid for manual fallback on devices that block direct paths -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
@@ -158,25 +161,25 @@
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 1</span>
                     <span id="badge-auto-1" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-1" onchange="uploadAudio(event, 1)" class="hidden">
-                    <label id="btn-file-1" for="file-1" class="mt-1 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                    <label id="btn-file-1" for="file-1" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 2</span>
                     <span id="badge-auto-2" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-2" onchange="uploadAudio(event, 2)" class="hidden">
-                    <label id="btn-file-2" for="file-2" class="mt-1 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                    <label id="btn-file-2" for="file-2" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 3</span>
                     <span id="badge-auto-3" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-3" onchange="uploadAudio(event, 3)" class="hidden">
-                    <label id="btn-file-3" for="file-3" class="mt-1 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                    <label id="btn-file-3" for="file-3" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 4</span>
                     <span id="badge-auto-4" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-4" onchange="uploadAudio(event, 4)" class="hidden">
-                    <label id="btn-file-4" for="file-4" class="mt-1 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                    <label id="btn-file-4" for="file-4" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
             </div>
 
@@ -191,7 +194,7 @@
     <script>
         lucide.createIcons();
 
-        // Scene Data & Transcripts matching Christian's files exactly (Original Colors & Cartoon Style SVGs)
+        // Original graphic data & text transcripts
         const sceneData = {
             1: {
                 badge: "Szene 1: Das Haustür-Dilemma",
@@ -295,20 +298,31 @@
         let activeAudio = null;
         let audioMode = 'auto'; // 'auto', 'm4a', 'speech'
 
+        // Construct absolute paths to prevent WhatsApp & mobile sub-directory routing failures
+        const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const resolvedBaseUrl = window.location.origin + basePath;
+
+        // Correctly URL-encode files to handle spaces gracefully
         const audioSources = {
-            1: "Szene 1.m4a",
-            2: "Szene 2.m4a",
-            3: "Szene 3.m4a",
-            4: "Szene 4.m4a"
+            1: resolvedBaseUrl + "Szene%201.m4a",
+            2: resolvedBaseUrl + "Szene%202.m4a",
+            3: resolvedBaseUrl + "Szene%203.m4a",
+            4: resolvedBaseUrl + "Szene%204.m4a"
         };
 
-        // Track verified loaded state of each file
         const audioFilesStatus = {
             1: false,
             2: false,
             3: false,
             4: false
         };
+
+        function addDiagnosticMsg(msg, type = "info") {
+            const logBox = document.getElementById('diagnostic-log');
+            const colorClass = type === "error" ? "text-red-400 font-bold" : (type === "success" ? "text-green-400 font-bold" : "text-stone-400");
+            logBox.innerHTML += `<p class="${colorClass}">> ${msg}</p>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
 
         // Render current scene elements
         function renderScene(sceneNum) {
@@ -341,33 +355,47 @@
             }
         }
 
-        // Check if files exist relative to page
-        function checkLocalAudioFiles() {
-            let filesFoundCount = 0;
+        // Extremely robust Mobile-Friendly network HEAD-Check for GitHub Pages files
+        async function checkLocalAudioFiles() {
+            addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
             
             for (let i = 1; i <= 4; i++) {
-                const testAudio = new Audio(audioSources[i]);
+                const url = audioSources[i];
+                addDiagnosticMsg(`Prüfe Datei: "Szene ${i}.m4a"...`);
                 
-                // If browser can load/determine metadata without error, it is present!
-                testAudio.addEventListener('loadedmetadata', () => {
-                    audioFilesStatus[i] = true;
-                    filesFoundCount++;
-                    updateFileBadgeUI(i, true);
+                try {
+                    // Fast HEAD request with 4-second timeout
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 4000);
                     
-                    // If we found local files, ensure mode says Christian is active
-                    if (i === currentScene) {
-                        updateActiveBadgeUI(true);
-                    }
-                });
+                    const response = await fetch(url, { 
+                        method: 'HEAD',
+                        signal: controller.signal 
+                    }).catch(() => {
+                        // GET fallback for restrictive hosting/mobile gateways
+                        return fetch(url, { method: 'GET', signal: controller.signal });
+                    });
+                    
+                    clearTimeout(timeoutId);
 
-                testAudio.addEventListener('error', () => {
+                    if (response.ok) {
+                        audioFilesStatus[i] = true;
+                        addDiagnosticMsg(`✓ Szene ${i}: Gefunden & geladen!`, "success");
+                        updateFileBadgeUI(i, true);
+                        if (i === currentScene) {
+                            updateActiveBadgeUI(true);
+                        }
+                    } else {
+                        throw new Error(`HTTP-Fehler ${response.status}`);
+                    }
+                } catch (e) {
                     audioFilesStatus[i] = false;
+                    addDiagnosticMsg(`✗ Szene ${i}: Fehlgeschlagen (${e.message})`, "error");
                     updateFileBadgeUI(i, false);
-                    
                     if (i === currentScene) {
                         updateActiveBadgeUI(false);
                     }
-                });
+                }
             }
         }
 
@@ -405,7 +433,6 @@
         function initAudio(sceneNum, autoPlay = false) {
             stopAllPlayback();
 
-            // Determine active playback source based on selected mode & auto detection
             const localFileExists = audioFilesStatus[sceneNum];
             const useM4a = (audioMode === 'm4a') || (audioMode === 'auto' && localFileExists);
 
@@ -425,8 +452,8 @@
                     handleTrackEnded();
                 });
 
-                activeAudio.addEventListener('error', () => {
-                    console.log("Stimme wurde blockiert oder fehlt. Automatisches Vorlesen gestartet.");
+                activeAudio.addEventListener('error', (e) => {
+                    console.warn("m4a audio triggered error, falling back to WebSpeech: ", e);
                     triggerSpeechFallback(sceneNum);
                 });
 
@@ -588,6 +615,7 @@
                 label.classList.add('bg-green-600');
 
                 updateFileBadgeUI(sceneNum, true);
+                addDiagnosticMsg(`Manuell hochgeladen: Szene ${sceneNum}`, "success");
 
                 if (currentScene === sceneNum) {
                     initAudio(sceneNum, isPlaying);
@@ -627,9 +655,9 @@
         }
 
         // Load First Slide automatically
-        window.onload = function() {
+        window.onload = async function() {
             renderScene(1);
-            checkLocalAudioFiles();
+            await checkLocalAudioFiles();
             initAudio(1, false);
         };
     </script>
