@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kiez-Story: Die SPD räumt auf!</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lexend:wght@300;400;600;800;900&display=swap');
@@ -18,19 +16,17 @@
             font-family: 'Lexend', sans-serif;
         }
         
-        /* Mobile Screen Optimizations */
+        /* Mobile App Settings */
         body {
             overscroll-behavior-y: contain;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
 
-        /* Stories-Indicator progress width transition */
         .story-bar-fill {
             transition: width 0.1s linear;
         }
 
-        /* Smooth scene transition animations */
         @keyframes scene-fade-in {
             from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
@@ -42,10 +38,8 @@
 </head>
 <body class="bg-stone-900 text-stone-900 body-font min-h-screen flex flex-col items-center justify-center overflow-hidden">
 
-    <!-- Mobile-First Container (Full screen on mobile, elegant vertical layout on desktop) -->
     <div class="w-full max-w-md h-[100dvh] bg-stone-950 flex flex-col justify-between relative shadow-2xl overflow-hidden border-x border-stone-800">
         
-        <!-- INSTAGRAM-STYLE STORIES PROGRESS BARS -->
         <div class="absolute top-0 inset-x-0 pt-3 px-4 z-40 flex space-x-1.5 bg-gradient-to-b from-black/85 to-transparent pb-8">
             <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
                 <div id="bar-1" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
@@ -64,7 +58,6 @@
             </div>
         </div>
 
-        <!-- HEADER BRANDING -->
         <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent text-white">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 rounded-full bg-[#E3000F] border border-white flex items-center justify-center font-black text-xs text-white">SPD</div>
@@ -79,28 +72,21 @@
             </button>
         </div>
 
-        <!-- TRANSPARENT TOUCH GESTURE SENSORS -->
         <div class="absolute inset-y-20 inset-x-0 z-30 flex">
-            <!-- Left 25% Area -> Back -->
             <div onclick="prevScene()" class="w-[25%] h-full cursor-pointer"></div>
-            <!-- Center 50% Area -> Play/Pause Toggle -->
             <div onclick="togglePlay()" class="w-[50%] h-full cursor-pointer flex items-center justify-center">
                 <div id="center-play-overlay" class="p-5 bg-black/60 rounded-full text-white backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none scale-90">
                     <i id="center-play-icon" data-lucide="play" class="w-10 h-10 fill-current"></i>
                 </div>
             </div>
-            <!-- Right 25% Area -> Next -->
             <div onclick="nextScene()" class="w-[25%] h-full cursor-pointer"></div>
         </div>
 
-        <!-- SCENE GRAPHICS CANVAS (Free-standing SVG over full background color) -->
         <div id="visual-stage" class="flex-grow flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fef08a] transition-all duration-700">
             <div id="scene-element-container" class="w-full h-full flex flex-col items-center justify-center text-center scene-active">
-                <!-- SVGs render here dynamically -->
-            </div>
+                </div>
         </div>
 
-        <!-- FLOATING BLACK SUBTITLE BAND (Bottom Overlay) -->
         <div class="absolute bottom-20 inset-x-4 z-40 bg-black/95 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl flex flex-col space-y-2 text-white">
             <div class="flex justify-between items-center w-full">
                 <span id="current-scene-badge" class="bg-[#E3000F] text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
@@ -113,7 +99,6 @@
             </p>
         </div>
 
-        <!-- FOOTER CONTROLLER -->
         <div class="px-4 pb-6 pt-3 bg-gradient-to-t from-black to-black/80 z-40 border-t border-white/5 flex justify-between items-center text-white">
             <div class="flex items-center space-x-1.5">
                 <i id="volume-indicator-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-stone-400"></i>
@@ -130,7 +115,6 @@
             </button>
         </div>
 
-        <!-- AUDIO DIAGNOSTIC SETTINGS DRAWER -->
         <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white overflow-y-auto max-h-[85vh]">
             <div class="flex justify-between items-center mb-4">
                 <h4 class="font-black text-sm uppercase text-white tracking-widest flex items-center">
@@ -151,7 +135,6 @@
                 </select>
             </div>
 
-            <!-- Server-Diagnostic Output -->
             <div class="mb-4 bg-stone-950 border border-stone-800 rounded-xl p-3">
                 <span class="text-[9px] font-black text-stone-400 uppercase tracking-widest block mb-1.5">Live-Server-Diagnose:</span>
                 <div id="diagnostic-log" class="text-[10px] font-mono space-y-1 text-stone-300 max-h-24 overflow-y-auto">
@@ -159,7 +142,6 @@
                 </div>
             </div>
 
-            <!-- Upload Fields Grid -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene1.m4a)</span>
@@ -200,11 +182,10 @@
 
     </div>
 
-    <!-- Script and Audio logic -->
     <script>
         lucide.createIcons();
 
-        // Beautiful freestanding vector illustrations without bounding boxes
+        // Freestanding clean SVG drawings with no internal text tags or black blocks
         const sceneData = {
             1: {
                 badge: "Szene 1: Das Haustür-Dilemma",
@@ -212,33 +193,24 @@
                 color: "#fef08a", // Soft Yellow
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
-                        <!-- House Facade -->
                         <rect x="25" y="45" width="50" height="40" fill="#38bdf8" stroke="#000000" stroke-width="2.5" rx="3"/>
-                        <!-- Roof -->
                         <polygon points="20,45 50,18 80,45" fill="#E3000F" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>
-                        <!-- Dark door on the Left -->
                         <rect x="34" y="60" width="13" height="25" fill="#1e293b" stroke="#000000" stroke-width="2"/>
-                        <!-- Bell Plaque on the Right -->
                         <rect x="58" y="58" width="6" height="12" fill="#e2e8f0" stroke="#000000" stroke-width="1.5" rx="1"/>
                         <circle cx="61" cy="62" r="1.8" fill="#E3000F"/>
-                        <!-- Hand pointing -->
                         <path d="M 83,73 C 76,71 72,66 69,64 L 68,64 L 70,67 C 72,73 76,76 83,76 Z" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Doorbell ripples -->
                         <path d="M 72,60 C 74,62 74,66 72,68" fill="none" stroke="#e11d48" stroke-width="1.5" class="animate-ping"/>
                     </svg>
                 `
             },
             2: {
                 badge: "Szene 2: Die Brücke",
-                text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen beigeleisteten Beitrag erbringen kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
+                text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen Beitrag leisten kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
                 color: "#ff8a8a", // Rose Red
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
-                        <!-- Bridge Arc -->
                         <path d="M 15,70 Q 50,44 85,70" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
-                        <!-- Heart -->
                         <path d="M 50,45 C 50,48 45,28 32,33 C 19,38 25,62 50,83 C 75,62 81,38 68,33 C 55,28 50,48 50,45 Z" fill="#E3000F" stroke="#000000" stroke-width="3"/>
-                        <!-- Sparkles -->
                         <circle cx="28" cy="20" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
                         <circle cx="72" cy="20" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
                     </svg>
@@ -250,22 +222,16 @@
                 color: "#fed7aa", // Soft Orange
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56">
-                        <!-- Ground line -->
                         <line x1="10" y1="78" x2="90" y2="78" stroke="#000000" stroke-width="2.5"/>
-                        <!-- Cart wheels -->
                         <circle cx="32" cy="72" r="7" fill="#ffffff" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="32" cy="72" r="2" fill="#000000"/>
                         <circle cx="56" cy="72" r="7" fill="#ffffff" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="56" cy="72" r="2" fill="#000000"/>
-                        <!-- Red Cart box -->
                         <rect x="25" y="48" width="31" height="17" fill="#E3000F" rx="2" stroke="#000000" stroke-width="2.5"/>
-                        <!-- Handle -->
                         <line x1="56" y1="58" x2="66" y2="44" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
                         <line x1="66" y1="44" x2="63" y2="38" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Grabber tool -->
                         <line x1="66" y1="42" x2="80" y2="33" stroke="#4b5563" stroke-width="2.5" stroke-linecap="round"/>
                         <path d="M 80,31 L 83,33 L 80,35 Z" fill="#E3000F" stroke="#000000" stroke-width="1"/>
-                        <!-- Orange Trash Bag -->
                         <path d="M 68,78 C 65,58 74,53 79,56 C 84,59 86,70 82,78 Z" fill="#ea580c" stroke="#000000" stroke-width="2.5"/>
                         <path d="M 74,56 L 79,56 L 76,52 Z" fill="#ea580c" stroke="#000000" stroke-width="1.5"/>
                     </svg>
@@ -277,20 +243,15 @@
                 color: "#bbf7d0", // Light Green
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56">
-                        <!-- Divided vertical line -->
                         <line x1="50" y1="12" x2="50" y2="88" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
-                        <!-- Central golden diamond spark -->
                         <polygon points="50,46 54,50 50,54 46,50" fill="#eab308" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Left Clean Tree -->
                         <circle cx="28" cy="40" r="13" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
                         <rect x="26" y="40" width="4" height="24" fill="#78350f" stroke="#000000" stroke-width="1.5"/>
                         <path d="M 15,64 Q 28,60 41,64" fill="none" stroke="#22c55e" stroke-width="2.5"/>
-                        <!-- Right Intercom Screen -->
                         <rect x="62" y="32" width="22" height="42" fill="#f8fafc" stroke="#334155" stroke-width="2.5" rx="3.5"/>
                         <circle cx="73" cy="38" r="1" fill="#000"/>
                         <circle cx="69" cy="38" r="1" fill="#000"/>
                         <circle cx="77" cy="38" r="1" fill="#000"/>
-                        <!-- Smiley face -->
                         <circle cx="73" cy="54" r="6.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <path d="M 71,55 Q 73,58 75,55" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
@@ -302,26 +263,20 @@
                 color: "#e2e8f0", // Clean Slate Grey
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56">
-                        <!-- Base Platform -->
                         <rect x="15" y="62" width="70" height="15" fill="#94a3b8" rx="2" stroke="#000000" stroke-width="2.5"/>
-                        <!-- Three drawn characters celebrating -->
-                        <!-- Left figure -->
                         <circle cx="32" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <line x1="32" y1="49.5" x2="32" y2="62" stroke="#000000" stroke-width="1.8"/>
                         <line x1="32" y1="52" x2="25" y2="44" stroke="#000000" stroke-width="1.5"/>
                         <line x1="32" y1="52" x2="39" y2="44" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Center figure in Red Vest -->
                         <circle cx="50" cy="41" r="5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <rect x="45" y="46" width="10" height="15" fill="#E3000F" stroke="#000000" stroke-width="1.8" rx="1.5"/>
                         <line x1="45" y1="49" x2="37" y2="38" stroke="#000000" stroke-width="1.8"/>
                         <line x1="55" y1="49" x2="63" y2="38" stroke="#000000" stroke-width="1.8"/>
                         <line x1="50" y1="61" x2="50" y2="63" stroke="#000000" stroke-width="1.8"/>
-                        <!-- Right figure -->
                         <circle cx="68" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <line x1="68" y1="49.5" x2="68" y2="62" stroke="#000000" stroke-width="1.8"/>
                         <line x1="68" y1="52" x2="61" y2="44" stroke="#000000" stroke-width="1.5"/>
                         <line x1="68" y1="52" x2="75" y2="44" stroke="#000000" stroke-width="1.5"/>
-                        <!-- SPD Red Ribbon/Banner -->
                         <rect x="37" y="16" width="26" height="11" fill="#E3000F" rx="2" stroke="#000000" stroke-width="1.8"/>
                         <text x="50" y="24" fill="#ffffff" font-family="Arial" font-size="7" font-weight="bold" text-anchor="middle">SPD</text>
                     </svg>
@@ -337,7 +292,7 @@
         const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         const resolvedBaseUrl = window.location.origin + basePath;
 
-        // Guaranteed chronologic 1-to-1 audio files mapping
+        // Strictly chronological mapping (1-to-1)
         const audioSources = {
             1: resolvedBaseUrl + "Szene1.m4a",
             2: resolvedBaseUrl + "Szene2.m4a",
@@ -355,7 +310,7 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        // Render current SVG and titles without background grids
+        // Render current freestanding vector drawing
         function renderScene(sceneNum) {
             const scene = sceneData[sceneNum];
             const stage = document.getElementById('visual-stage');
@@ -373,12 +328,12 @@
                 </div>
             `;
 
-            // Subtitle text updates in the black bottom ribbon
+            // Subtitle ribbon update
             document.getElementById('caption-text').innerText = scene.text;
             document.getElementById('current-scene-badge').innerText = scene.badge;
             document.getElementById('current-scene-num').innerText = `${sceneNum} / 5`;
 
-            // Render top bar steps
+            // Render bars
             for (let i = 1; i <= 5; i++) {
                 const bar = document.getElementById(`bar-${i}`);
                 if (i < sceneNum) {
@@ -389,7 +344,7 @@
             }
         }
 
-        // Web Check function for local server and GitHub Pages path mapping
+        // Network loader checking both condensed and space naming conventions
         async function checkLocalAudioFiles() {
             addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
             
@@ -401,7 +356,7 @@
                 try {
                     let response = await fetch(url, { method: 'HEAD' }).catch(() => fetch(url, { method: 'GET' }));
                     
-                    // Space fallback check if direct filename lacks spacing
+                    // Space-Check fallback
                     if (!response.ok) {
                         const spaceUrl = resolvedBaseUrl + `Szene%20${i}.m4a`;
                         response = await fetch(spaceUrl, { method: 'HEAD' }).catch(() => fetch(spaceUrl, { method: 'GET' }));
@@ -480,7 +435,7 @@
                 });
 
                 activeAudio.addEventListener('error', (e) => {
-                    console.warn("m4a audio triggered error, falling back to WebSpeech: ", e);
+                    console.warn("m4a audio error, falling back to WebSpeech: ", e);
                     triggerSpeechFallback(sceneNum);
                 });
 
@@ -559,7 +514,6 @@
             }
         }
 
-        // Explicitly load scene & corresponding chronological audio directly
         function jumpToScene(sceneNum, autoPlay = false) {
             currentScene = sceneNum;
             renderScene(sceneNum);
@@ -617,7 +571,6 @@
             drawer.classList.toggle('translate-y-full');
         }
 
-        // Force reload with explicit configuration
         function changeAudioMode() {
             audioMode = document.getElementById('audio-mode-selector').value;
             initAudio(currentScene, isPlaying);
