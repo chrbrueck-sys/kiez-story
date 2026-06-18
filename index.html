@@ -62,13 +62,21 @@
             </div>
         </div>
 
-        <!-- HEADER BRANDING -->
-        <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent text-white">
-            <div class="flex items-center space-x-2">
-                <div class="w-8 h-8 rounded-full bg-[#E3000F] border border-white flex items-center justify-center font-black text-xs text-white">SPD</div>
-                <div>
-                    <h3 class="text-xs font-black tracking-wider uppercase leading-none">Spandau-Neustadt</h3>
-                    <span class="text-[9px] text-stone-300 font-semibold leading-none">Kiez-Initiative 2026</span>
+        <!-- HEADER BRANDING (Larger Logo & Bold Text) -->
+        <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-start bg-gradient-to-b from-black/70 via-black/35 to-transparent text-white pt-4">
+            <div class="flex items-center space-x-3">
+                <!-- Much larger SPD Spandau corporate badge style logo -->
+                <div class="w-14 h-14 bg-[#E3000F] border-2 border-white flex flex-col items-center justify-center shadow-lg rounded-xl transform -rotate-1 shrink-0">
+                    <span class="font-black text-xl leading-none tracking-tighter text-white">SPD</span>
+                    <span class="text-[8px] font-black tracking-widest text-white/95 leading-none uppercase -mt-0.5">Spandau</span>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-lg min-[375px]:text-xl font-black tracking-wide uppercase leading-tight text-white drop-shadow-[0_1.5px_1.5px_rgba(0,0,0,0.8)]">
+                        Spandau-Neustadt
+                    </h3>
+                    <span class="text-xs min-[375px]:text-sm text-stone-200 font-extrabold tracking-widest leading-none drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] mt-0.5">
+                        Kiez-Initiative 2026
+                    </span>
                 </div>
             </div>
             <button onclick="toggleSettingsDrawer()" class="text-white/80 hover:text-white p-2 rounded-full bg-black/30 backdrop-blur-sm transition relative">
@@ -495,17 +503,18 @@
             initAudio(sceneNum, autoPlay);
         }
 
+        // Handle touch gesture triggers with instant playback starting
         function nextScene() {
             if (currentScene < 5) {
-                jumpToScene(currentScene + 1, isPlaying);
+                jumpToScene(currentScene + 1, true);
             }
         }
 
         function prevScene() {
             if (currentScene > 1) {
-                jumpToScene(currentScene - 1, isPlaying);
+                jumpToScene(currentScene - 1, true);
             } else {
-                jumpToScene(1, isPlaying);
+                jumpToScene(1, true);
             }
         }
 
@@ -606,7 +615,8 @@
         window.onload = async function() {
             renderScene(1);
             await checkLocalAudioFiles();
-            initAudio(1, false);
+            // Start playing immediately on open!
+            initAudio(1, true);
         };
     </script>
 </body>
