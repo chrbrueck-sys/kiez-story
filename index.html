@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kiez-Story: Die SPD räumt auf!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lexend:wght@300;400;600;800;900&display=swap');
+        
+        .maus-font {
+            font-family: 'Fredoka One', cursive, sans-serif;
+        }
+        .body-font {
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        /* Disable selection and pull-to-refresh for native app feel */
+        body {
+            overscroll-behavior-y: contain;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* Stories-Indicator width transition */
+        .story-bar-fill {
+            transition: width 0.1s linear;
+        }
+
+        /* Animations for transition */
+        @keyframes scene-fade-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .scene-active {
+            animation: scene-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-stone-900 text-stone-900 body-font min-h-screen flex flex-col items-center justify-center overflow-hidden">
+
+    <!-- Container designed specifically for Mobile Viewports (16:9 vertical on Desktop, full screen on Mobile) -->
+    <div class="w-full max-w-md h-[100dvh] bg-stone-950 flex flex-col justify-between relative shadow-2xl overflow-hidden border-x border-stone-800">
+        
+        <!-- TOP INDICATORS: Stories Progress Bars (5 Scenes) -->
+        <div class="absolute top-0 inset-x-0 pt-3 px-4 z-40 flex space-x-1.5 bg-gradient-to-b from-black/80 to-transparent pb-8">
+            <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                <div id="bar-1" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
+            </div>
+            <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                <div id="bar-2" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
+            </div>
+            <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                <div id="bar-3" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
+            </div>
+            <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                <div id="bar-4" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
+            </div>
+            <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                <div id="bar-5" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
+            </div>
+        </div>
+
+        <!-- TOP BAR: Brand Label -->
+        <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent text-white">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full bg-[#E3000F] border border-white flex items-center justify-center font-black text-xs text-white">SPD</div>
+                <div>
+                    <h3 class="text-xs font-black tracking-wider uppercase leading-none">Spandau-Neustadt</h3>
+                    <span class="text-[9px] text-stone-300 font-semibold leading-none">Kiez-Initiative 2026</span>
+                </div>
+            </div>
+            <button onclick="toggleSettingsDrawer()" class="text-white/80 hover:text-white p-2 rounded-full bg-black/30 backdrop-blur-sm transition relative">
+                <i data-lucide="sliders" class="w-4 h-4"></i>
+                <span id="settings-alert-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-green-500 rounded-full hidden"></span>
+            </button>
+        </div>
+
+        <!-- MIDDLE LAYER: Story-style Touch Navigation Hotspots (Transparent Overlay) -->
+        <div class="absolute inset-y-20 inset-x-0 z-30 flex">
+            <!-- Left Side Tap (25% Width) -> Previous Slide -->
+            <div onclick="prevScene()" class="w-[25%] h-full cursor-pointer active:bg-white/5 transition-colors duration-100"></div>
+            <!-- Center Tap (50% Width) -> Play/Pause -->
+            <div onclick="togglePlay()" class="w-[50%] h-full cursor-pointer flex items-center justify-center">
+                <!-- Large play overlay icon that blinks on pause -->
+                <div id="center-play-overlay" class="p-5 bg-black/60 rounded-full text-white backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none scale-90">
+                    <i id="center-play-icon" data-lucide="play" class="w-10 h-10 fill-current"></i>
+                </div>
+            </div>
+            <!-- Right Side Tap (25% Width) -> Next Slide -->
+            <div onclick="nextScene()" class="w-[25%] h-full cursor-pointer active:bg-white/5 transition-colors duration-100"></div>
+        </div>
+
+        <!-- BACKGROUND VISUAL STAGE: Colorful Illustrator Area with Original Color Palette & Larger Motifs -->
+        <div id="visual-stage" class="flex-grow flex items-center justify-center p-4 transition-all duration-700 bg-[#fef08a]">
+            <div id="scene-element-container" class="w-full h-full flex flex-col items-center justify-center text-center scene-active">
+                <!-- SVGs will render here -->
+            </div>
+        </div>
+
+        <!-- OVERLAY BOTTOM CAPTIONS: Sleek high-contrast text band for mobile subtitle reading -->
+        <div class="absolute bottom-20 inset-x-4 z-40 bg-black/95 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl flex flex-col space-y-2 text-white">
+            <div class="flex justify-between items-center w-full">
+                <span id="current-scene-badge" class="bg-[#E3000F] text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                    Szene 1: Das Dilemma
+                </span>
+                <span id="current-scene-num" class="text-stone-400 text-[10px] font-bold">1 / 5</span>
+            </div>
+            <p id="caption-text" class="text-sm font-semibold leading-relaxed text-stone-100 tracking-wide">
+                Prüfe Audio-Dateien...
+            </p>
+        </div>
+
+        <!-- CONTROLLER BAR (Bottom Navigation for control) -->
+        <div class="px-4 pb-6 pt-3 bg-gradient-to-t from-black to-black/80 z-40 border-t border-white/5 flex justify-between items-center text-white">
+            <div class="flex items-center space-x-1.5">
+                <i id="volume-indicator-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-stone-400"></i>
+                <span id="audio-type-badge" class="text-[9px] text-stone-400 font-black uppercase tracking-wider">Lade Kiez-Stimmen...</span>
+            </div>
+            
+            <button onclick="togglePlay()" class="bg-[#E3000F] text-white p-3.5 rounded-full border-2 border-white/10 shadow-lg hover:scale-105 active:scale-95 transition flex items-center justify-center">
+                <i id="play-icon" data-lucide="play" class="w-5 h-5 fill-current"></i>
+            </button>
+
+            <button onclick="toggleSettingsDrawer()" class="text-stone-400 hover:text-white flex items-center space-x-1">
+                <span class="text-[9px] font-black tracking-widest uppercase">STIMMEN-CHECK</span>
+                <i data-lucide="chevron-up" class="w-3 h-3"></i>
+            </button>
+        </div>
+
+        <!-- SETTINGS SLIDE-UP DRAWER -->
+        <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white overflow-y-auto max-h-[85vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="font-black text-sm uppercase text-white tracking-widest flex items-center">
+                    <i data-lucide="sliders" class="w-4 h-4 mr-1.5 text-[#E3000F]"></i>
+                    Audio &amp; Sprach-Konfiguration
+                </h4>
+                <button onclick="toggleSettingsDrawer()" class="text-stone-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Custom selector -->
+            <div class="mb-4 text-stone-900">
+                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest block mb-1 text-white">Sprach-Modus:</label>
+                <select id="audio-mode-selector" onchange="changeAudioMode()" class="w-full bg-stone-950 border border-stone-800 text-xs font-bold p-2.5 rounded-xl text-white">
+                    <option value="auto">Automatische Erkennung (Empfohlen)</option>
+                    <option value="m4a">Ausschließlich deine m4a-Stimmen</option>
+                    <option value="speech">Ausschließlich Vorlesestimme (Synthetisch)</option>
+                </select>
+            </div>
+
+            <!-- Live Diagnostic Logger -->
+            <div class="mb-4 bg-stone-950 border border-stone-800 rounded-xl p-3">
+                <span class="text-[9px] font-black text-stone-400 uppercase tracking-widest block mb-1.5">Live-Server-Diagnose:</span>
+                <div id="diagnostic-log" class="text-[10px] font-mono space-y-1 text-stone-300 max-h-24 overflow-y-auto">
+                    <p class="text-stone-500">> Starte Kiez-Stimmen-Check...</p>
+                </div>
+            </div>
+
+            <!-- Manual File Upload Grid -->
+            <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
+                <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene1.m4a)</span>
+                    <span id="badge-auto-1" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
+                    <input type="file" accept="audio/*" id="file-1" onchange="uploadAudio(event, 1)" class="hidden">
+                    <label id="btn-file-1" for="file-1" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                </div>
+                <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 2 (Szene2.m4a)</span>
+                    <span id="badge-auto-2" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
+                    <input type="file" accept="audio/*" id="file-2" onchange="uploadAudio(event, 2)" class="hidden">
+                    <label id="btn-file-2" for="file-2" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                </div>
+                <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 3 (Szene3.m4a)</span>
+                    <span id="badge-auto-3" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
+                    <input type="file" accept="audio/*" id="file-3" onchange="uploadAudio(event, 3)" class="hidden">
+                    <label id="btn-file-3" for="file-3" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                </div>
+                <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 4 (Szene4.m4a)</span>
+                    <span id="badge-auto-4" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
+                    <input type="file" accept="audio/*" id="file-4" onchange="uploadAudio(event, 4)" class="hidden">
+                    <label id="btn-file-4" for="file-4" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                </div>
+                <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative col-span-2">
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 5 (Szene5.m4a)</span>
+                    <span id="badge-auto-5" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
+                    <input type="file" accept="audio/*" id="file-5" onchange="uploadAudio(event, 5)" class="hidden">
+                    <label id="btn-file-5" for="file-5" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
+                </div>
+            </div>
+
+            <button onclick="toggleSettingsDrawer()" class="w-full bg-[#E3000F] hover:bg-red-700 text-white font-extrabold text-xs py-2.5 rounded-xl uppercase tracking-widest transition">
+                Speichern &amp; Zurück
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Audio Player Controller Logic -->
+    <script>
+        lucide.createIcons();
+
+        // 5 Scenes matching Christian's transcripts, visual layouts and chronologic order
+        const sceneData = {
+            1: {
+                badge: "Szene 1: Das Haustür-Dilemma",
+                text: "Im September ist Wahl und wir wissen alle. Wir müssen an die Türen, aber wir wissen auch, es ist nicht jedermanns Sache. Daher wollen wir eine ergänzende Aktion machen bei der jeder mitmachen kann und die Tür zu türaktion damit ideal ergänzt.",
+                color: "#fef08a", // Soft Yellow
+                svg: `
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- House Body (Blue) -->
+                        <rect x="30" y="45" width="40" height="40" fill="#38bdf8" stroke="#000000" stroke-width="2.5"/>
+                        <!-- Roof (Red) -->
+                        <polygon points="25,45 50,18 75,45" fill="#E3000F" stroke="#000000" stroke-width="2.5"/>
+                        <!-- Door (Black rectangular door on the LEFT side of the house face) -->
+                        <rect x="36" y="60" width="12" height="25" fill="#1e293b" stroke="#000000" stroke-width="2"/>
+                        <!-- Doorbell plaque (on the RIGHT side of the house face) -->
+                        <rect x="58" y="58" width="6" height="12" fill="#e2e8f0" stroke="#000000" stroke-width="1.5"/>
+                        <circle cx="61" cy="62" r="1.8" fill="#E3000F"/>
+                        <!-- Hand pointing at the bell -->
+                        <path d="M 82,72 C 75,70 71,65 68,63 L 67,63 L 69,66 C 71,72 75,75 82,75 Z" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
+                        <!-- Bell alert wave -->
+                        <path d="M 70,59 C 72,61 72,65 70,67" fill="none" stroke="#e11d48" stroke-width="1.5" class="animate-ping"/>
+                    </svg>
+                `
+            },
+            2: {
+                badge: "Szene 2: Die Brücke",
+                text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen Beitrag leisten kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
+                color: "#ff8a8a", // Rose Red
+                svg: `
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Black Bridge Arc -->
+                        <path d="M 20,68 Q 50,45 80,68" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+                        <!-- Big Red Heart resting precisely on the bridge center -->
+                        <path d="M 50,48 C 50,48 45,30 33,35 C 21,40 27,62 50,82 C 73,62 79,40 67,35 C 55,30 50,48 50,48 Z" fill="#E3000F" stroke="#000000" stroke-width="3"/>
+                        <!-- Small Yellow Sparks -->
+                        <circle cx="28" cy="22" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
+                        <circle cx="72" cy="22" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
+                    </svg>
+                `
+            },
+            3: {
+                badge: "Szene 3: Die Logistik",
+                text: "Wie funktioniert es? Hier ist ein ziehwagen bzw. Ein lastenrad und das sind greifzangen und Säcke. Die bekommen wir von der BSR im Rahmen der Richtlinie kehrenbürger. Und das geht ganz einfach. Wir gehen durch den Kiez. Wir sammeln den wilden Müll, ein stellen die Säcke an die Ecke und die BSR holt sie ab. Wir machen das von Juni bis zum Wahltag im September. Einmal die Woche in kleinen Teams von zwei oder drei Leuten je zwei Stunden und wenn der Wahlkampf es erfordert, vielleicht auch zweimal pro Woche.",
+                color: "#fed7aa", // Soft Orange
+                svg: `
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Ground Line -->
+                        <line x1="15" y1="75" x2="85" y2="75" stroke="#000000" stroke-width="2.5"/>
+                        <!-- Wheels (White circles with black centers) -->
+                        <circle cx="35" cy="70" r="6" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+                        <circle cx="35" cy="70" r="2" fill="#000000"/>
+                        <circle cx="55" cy="70" r="6" fill="#ffffff" stroke="#000000" stroke-width="2"/>
+                        <circle cx="55" cy="70" r="2" fill="#000000"/>
+                        <!-- Red Handcart body -->
+                        <rect x="28" y="48" width="28" height="16" fill="#E3000F" rx="2" stroke="#000000" stroke-width="2.5"/>
+                        <!-- Handle pointing up-right with handle grip -->
+                        <line x1="56" y1="58" x2="66" y2="44" stroke="#000000" stroke-width="2.5"/>
+                        <line x1="66" y1="44" x2="63" y2="38" stroke="#000000" stroke-width="2.5"/>
+                        <!-- Grabber tool pointing to orange bag -->
+                        <line x1="68" y1="42" x2="80" y2="34" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M 80,32 L 83,34 L 80,36 Z" fill="#000000"/>
+                        <!-- Orange Trash Bag -->
+                        <path d="M 68,75 C 65,58 73,53 78,56 C 83,59 85,68 82,75 Z" fill="#ea580c" stroke="#000000" stroke-width="2.5"/>
+                        <path d="M 74,56 L 79,56 L 76,52 Z" fill="#ea580c" stroke="#000000" stroke-width="1.5"/>
+                    </svg>
+                `
+            },
+            4: {
+                badge: "Szene 4: Die Psychologie",
+                text: "Viele sagen Politik redet doch nur. Mit unserer Aktion drehen wir das um. Wir gehen nicht hin, um zu reden. Wir gehen hin um anzupacken. Man sieht uns in den roten Westen. Sie sehen, dass wir etwas tun. Sauberkeit ist ein zentrales Thema. Das macht die Arbeit einfacher für diejenigen von uns, die danach das Gespräch suchen, also den Tür zu türwahlkampf Das Vergessen sich einfach perfekt, eine saubere Neustart und ein Wahlkampf, bei dem jeder von uns mitmachen kann. Mein Appell an euch. Bitte mitmachen!",
+                color: "#bbf7d0", // Light Green
+                svg: `
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Vertical Dotted Line -->
+                        <line x1="50" y1="15" x2="50" y2="85" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
+                        <!-- Yellow central diamond spark -->
+                        <polygon points="50,46 54,50 50,54 46,50" fill="#eab308" stroke="#000000" stroke-width="1.5"/>
+                        <!-- Left side: Clean Green Tree on a brown stem -->
+                        <circle cx="28" cy="40" r="12" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
+                        <rect x="26" y="40" width="4" height="24" fill="#78350f" stroke="#000000" stroke-width="1.5"/>
+                        <path d="M 16,64 Q 28,60 40,64" fill="none" stroke="#22c55e" stroke-width="2.5"/>
+                        <!-- Right side: Door Intercom screen with happy face -->
+                        <rect x="62" y="32" width="22" height="42" fill="#f8fafc" stroke="#334155" stroke-width="2.5" rx="3"/>
+                        <circle cx="73" cy="53" r="6" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
+                        <path d="M 71,54 Q 73,57 75,54" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                `
+            },
+            5: {
+                badge: "Szene 5: Outro & Appell",
+                text: "Das ergänzt sich einfach perfekt. Eine saubere Neustadt und ein Wahlkampf, bei dem jeder von uns mitmachen kann. Mein Appell an euch, an mich: Bitte mitmachen!",
+                color: "#e2e8f0", // Light Grey
+                svg: `
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Grey Platform Block -->
+                        <rect x="15" y="60" width="70" height="15" fill="#94a3b8" rx="2" stroke="#000000" stroke-width="2"/>
+                        <!-- Three friendly stick-figures celebrating -->
+                        <!-- Left Fig -->
+                        <circle cx="32" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.2"/>
+                        <line x1="32" y1="49.5" x2="32" y2="60" stroke="#000000" stroke-width="1.5"/>
+                        <line x1="32" y1="52" x2="25" y2="44" stroke="#000000" stroke-width="1.2"/>
+                        <line x1="32" y1="52" x2="39" y2="44" stroke="#000000" stroke-width="1.2"/>
+                        <!-- Center Fig with red vest -->
+                        <circle cx="50" cy="41" r="5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
+                        <rect x="45" y="46" width="10" height="14" fill="#E3000F" stroke="#000000" stroke-width="1.5" rx="1"/>
+                        <line x1="45" y1="49" x2="37" y2="38" stroke="#000000" stroke-width="1.5"/>
+                        <line x1="55" y1="49" x2="63" y2="38" stroke="#000000" stroke-width="1.5"/>
+                        <!-- Right Fig -->
+                        <circle cx="68" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.2"/>
+                        <line x1="68" y1="49.5" x2="68" y2="60" stroke="#000000" stroke-width="1.5"/>
+                        <line x1="68" y1="52" x2="61" y2="44" stroke="#000000" stroke-width="1.2"/>
+                        <line x1="68" y1="52" x2="75" y2="44" stroke="#000000" stroke-width="1.2"/>
+                        <!-- SPD Banner -->
+                        <rect x="38" y="16" width="24" height="10" fill="#E3000F" rx="1.5" stroke="#000000" stroke-width="1.5"/>
+                        <text x="50" y="23" fill="#ffffff" font-family="Arial" font-size="6" font-weight="bold" text-anchor="middle">SPD</text>
+                    </svg>
+                `
+            }
+        };
+
+        let isPlaying = false;
+        let currentScene = 1;
+        let activeAudio = null;
+        let audioMode = 'auto'; // 'auto', 'm4a', 'speech'
+
+        // Dynamic absolute paths for bulletproof GitHub Pages deployment
+        const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        const resolvedBaseUrl = window.location.origin + basePath;
+
+        // Base file names expected (Checks both variations: with space or no space)
+        const audioFileNames = {
+            1: "Szene1.m4a",
+            2: "Szene2.m4a",
+            3: "Szene3.m4a",
+            4: "Szene4.m4a",
+            5: "Szene5.m4a"
+        };
+
+        const audioSources = {};
+        const audioFilesStatus = { 1: false, 2: false, 3: false, 4: false, 5: false };
+
+        function addDiagnosticMsg(msg, type = "info") {
+            const logBox = document.getElementById('diagnostic-log');
+            const colorClass = type === "error" ? "text-red-400 font-bold" : (type === "success" ? "text-green-400 font-bold" : "text-stone-400");
+            logBox.innerHTML += `<p class="${colorClass}">> ${msg}</p>`;
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // Render current scene elements
+        function renderScene(sceneNum) {
+            const scene = sceneData[sceneNum];
+            const stage = document.getElementById('visual-stage');
+            stage.style.backgroundColor = scene.color;
+
+            const container = document.getElementById('scene-element-container');
+            container.innerHTML = `
+                <div class="scene-active">
+                    <div class="flex justify-center mb-4">
+                        ${scene.svg}
+                    </div>
+                </div>
+            `;
+
+            // Update bottom captions and title
+            document.getElementById('caption-text').innerText = scene.text;
+            document.getElementById('current-scene-badge').innerText = scene.badge;
+            document.getElementById('current-scene-num').innerText = `${sceneNum} / 5`;
+
+            // Reset and paint progress bars
+            for (let i = 1; i <= 5; i++) {
+                const bar = document.getElementById(`bar-${i}`);
+                if (i < sceneNum) {
+                    bar.style.width = '100%';
+                } else if (i > sceneNum) {
+                    bar.style.width = '0%';
+                }
+            }
+        }
+
+        // Extremely robust HEAD request that fallback-checks names with/without space
+        async function checkLocalAudioFiles() {
+            addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
+            
+            for (let i = 1; i <= 5; i++) {
+                const standardName = `Szene${i}.m4a`;
+                const spacedName = `Szene%20${i}.m4a`;
+                let resolvedUrl = resolvedBaseUrl + standardName;
+                
+                addDiagnosticMsg(`Prüfe "Szene ${i}" auf dem Server...`);
+                
+                try {
+                    // Try without space first
+                    let response = await fetch(resolvedUrl, { method: 'HEAD' }).catch(() => {
+                        return fetch(resolvedUrl, { method: 'GET' });
+                    });
+
+                    if (response.ok) {
+                        audioSources[i] = resolvedUrl;
+                        audioFilesStatus[i] = true;
+                        addDiagnosticMsg(`✓ Gefunden: "${standardName}"`, "success");
+                        updateFileBadgeUI(i, true);
+                    } else {
+                        // Try with space
+                        resolvedUrl = resolvedBaseUrl + spacedName;
+                        response = await fetch(resolvedUrl, { method: 'HEAD' }).catch(() => {
+                            return fetch(resolvedUrl, { method: 'GET' });
+                        });
+
+                        if (response.ok) {
+                            audioSources[i] = resolvedUrl;
+                            audioFilesStatus[i] = true;
+                            addDiagnosticMsg(`✓ Gefunden: "Szene ${i}.m4a"`, "success");
+                            updateFileBadgeUI(i, true);
+                        } else {
+                            throw new Error("Datei nicht am Server gefunden.");
+                        }
+                    }
+                } catch (e) {
+                    audioFilesStatus[i] = false;
+                    audioSources[i] = resolvedBaseUrl + standardName; // default fallback path
+                    addDiagnosticMsg(`✗ Nicht gefunden. (Vorlese-Stimme aktiv)`, "error");
+                    updateFileBadgeUI(i, false);
+                }
+
+                if (i === currentScene) {
+                    updateActiveBadgeUI(audioFilesStatus[i]);
+                }
+            }
+        }
+
+        // Update the indicators inside settings drawer
+        function updateFileBadgeUI(sceneNum, isPresent) {
+            const badge = document.getElementById(`badge-auto-${sceneNum}`);
+            if (isPresent) {
+                badge.innerText = "GEFUNDEN ✓";
+                badge.className = "text-[8px] block font-black text-green-500 uppercase mt-0.5";
+                document.getElementById('settings-alert-dot').classList.remove('hidden');
+            } else {
+                badge.innerText = "VORLESEN 💬";
+                badge.className = "text-[8px] block font-bold text-stone-500 uppercase mt-0.5";
+            }
+        }
+
+        function updateActiveBadgeUI(isChristianStimme) {
+            const badge = document.getElementById('audio-type-badge');
+            const icon = document.getElementById('volume-indicator-icon');
+            
+            if (isChristianStimme) {
+                badge.innerText = "STIMME: CHRISTIAN (AKTIV)";
+                badge.className = "text-[9px] text-green-400 font-black uppercase tracking-wider";
+                icon.className = "w-3.5 h-3.5 text-green-400";
+            } else {
+                badge.innerText = "STIMME: AUTOMATISCH";
+                badge.className = "text-[9px] text-stone-400 font-bold uppercase tracking-wider";
+                icon.className = "w-3.5 h-3.5 text-stone-400";
+            }
+        }
+
+        // Initialize Audio player
+        function initAudio(sceneNum, autoPlay = false) {
+            stopAllPlayback();
+
+            const localFileExists = audioFilesStatus[sceneNum];
+            const useM4a = (audioMode === 'm4a') || (audioMode === 'auto' && localFileExists);
+
+            if (useM4a) {
+                const src = audioSources[sceneNum];
+                activeAudio = new Audio(src);
+                updateActiveBadgeUI(true);
+
+                activeAudio.addEventListener('timeupdate', () => {
+                    if (activeAudio && activeAudio.duration) {
+                        const pct = (activeAudio.currentTime / activeAudio.duration) * 100;
+                        document.getElementById(`bar-${sceneNum}`).style.width = `${pct}%`;
+                    }
+                });
+
+                activeAudio.addEventListener('ended', () => {
+                    handleTrackEnded();
+                });
+
+                activeAudio.addEventListener('error', (e) => {
+                    console.warn("m4a audio triggered error, falling back to WebSpeech: ", e);
+                    triggerSpeechFallback(sceneNum);
+                });
+
+                if (autoPlay) {
+                    activeAudio.play().then(() => {
+                        isPlaying = true;
+                        updatePlayButtonState();
+                    }).catch((e) => {
+                        console.log("Play failed: ", e);
+                        triggerSpeechFallback(sceneNum);
+                    });
+                }
+            } else {
+                updateActiveBadgeUI(false);
+                if (autoPlay) {
+                    triggerSpeechFallback(sceneNum);
+                }
+            }
+        }
+
+        // Web Speech Fallback
+        let speechSynth = window.speechSynthesis;
+        let speechUtterance = null;
+        let fallbackInterval = null;
+
+        function triggerSpeechFallback(sceneNum) {
+            stopAllPlayback();
+            updateActiveBadgeUI(false);
+
+            const textToSpeak = sceneData[sceneNum].text;
+            speechUtterance = new SpeechSynthesisUtterance(textToSpeak);
+            speechUtterance.lang = 'de-DE';
+            speechUtterance.rate = 1.05;
+
+            speechUtterance.onstart = () => {
+                isPlaying = true;
+                updatePlayButtonState();
+                
+                // Simulate story progress bar filling for speech synthesis
+                let durationEstimateMs = textToSpeak.length * 68;
+                let startTime = Date.now();
+                
+                clearInterval(fallbackInterval);
+                fallbackInterval = setInterval(() => {
+                    let elapsed = Date.now() - startTime;
+                    let pct = Math.min((elapsed / durationEstimateMs) * 100, 100);
+                    document.getElementById(`bar-${sceneNum}`).style.width = `${pct}%`;
+                }, 100);
+            };
+
+            speechUtterance.onend = () => {
+                clearInterval(fallbackInterval);
+                handleTrackEnded();
+            };
+
+            speechSynth.speak(speechUtterance);
+        }
+
+        // Navigation flow
+        function handleTrackEnded() {
+            if (currentScene < 5) {
+                jumpToScene(currentScene + 1, true);
+            } else {
+                isPlaying = false;
+                updatePlayButtonState();
+                playMausPlingPling();
+                document.getElementById('bar-5').style.width = '100%';
+            }
+        }
+
+        function stopAllPlayback() {
+            clearInterval(fallbackInterval);
+            if (activeAudio) {
+                activeAudio.pause();
+                activeAudio = null;
+            }
+            if (speechSynth && speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+        }
+
+        function jumpToScene(sceneNum, autoPlay = false) {
+            currentScene = sceneNum;
+            renderScene(sceneNum);
+            initAudio(sceneNum, autoPlay);
+        }
+
+        function nextScene() {
+            if (currentScene < 5) {
+                jumpToScene(currentScene + 1, isPlaying);
+            }
+        }
+
+        function prevScene() {
+            if (currentScene > 1) {
+                jumpToScene(currentScene - 1, isPlaying);
+            } else {
+                jumpToScene(1, isPlaying);
+            }
+        }
+
+        function togglePlay() {
+            const overlay = document.getElementById('center-play-overlay');
+            const overlayIcon = document.getElementById('center-play-icon');
+
+            if (isPlaying) {
+                stopAllPlayback();
+                isPlaying = false;
+                
+                // Show visual feedback on screen
+                overlayIcon.setAttribute('data-lucide', 'play');
+                overlay.style.opacity = '1';
+                setTimeout(() => { overlay.style.opacity = '0'; }, 600);
+            } else {
+                initAudio(currentScene, true);
+                
+                // Show play indicator flash
+                overlayIcon.setAttribute('data-lucide', 'pause');
+                overlay.style.opacity = '1';
+                setTimeout(() => { overlay.style.opacity = '0'; }, 600);
+            }
+            updatePlayButtonState();
+            lucide.createIcons();
+        }
+
+        function updatePlayButtonState() {
+            const icon = document.getElementById('play-icon');
+            if (isPlaying) {
+                icon.setAttribute('data-lucide', 'pause');
+            } else {
+                icon.setAttribute('data-lucide', 'play');
+            }
+            lucide.createIcons();
+        }
+
+        // Drawer Setup
+        function toggleSettingsDrawer() {
+            const drawer = document.getElementById('settings-drawer');
+            drawer.classList.toggle('translate-y-full');
+        }
+
+        function changeAudioMode() {
+            audioMode = document.getElementById('audio-mode-selector').value;
+            initAudio(currentScene, isPlaying);
+        }
+
+        // Local Voice File Uploader Integration
+        function uploadAudio(event, sceneNum) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                audioSources[sceneNum] = url;
+                audioFilesStatus[sceneNum] = true;
+                
+                // visual validation on label
+                const label = document.getElementById(`btn-file-${sceneNum}`);
+                label.innerText = "GELADEN ✓";
+                label.classList.remove('bg-stone-800');
+                label.classList.add('bg-green-600');
+
+                updateFileBadgeUI(sceneNum, true);
+                addDiagnosticMsg(`Manuell hochgeladen: Szene ${sceneNum}`, "success");
+
+                if (currentScene === sceneNum) {
+                    initAudio(sceneNum, isPlaying);
+                }
+            }
+        }
+
+        // Outro Sound Engine for "Sendung mit der Maus"
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playMausPlingPling() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc1 = audioCtx.createOscillator();
+            const gain1 = audioCtx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            gain1.gain.setValueAtTime(0.25, audioCtx.currentTime);
+            gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            osc1.connect(gain1);
+            gain1.connect(audioCtx.destination);
+            osc1.start();
+            osc1.stop(audioCtx.currentTime + 0.35);
+
+            setTimeout(() => {
+                const osc2 = audioCtx.createOscillator();
+                const gain2 = audioCtx.createGain();
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1600, audioCtx.currentTime);
+                gain2.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc2.connect(gain2);
+                gain2.connect(audioCtx.destination);
+                osc2.start();
+                osc2.stop(audioCtx.currentTime + 0.35);
+            }, 100);
+        }
+
+        // Load First Slide automatically
+        window.onload = async function() {
+            renderScene(1);
+            await checkLocalAudioFiles();
+            initAudio(1, false);
+        };
+    </script>
+</body>
+</html>
