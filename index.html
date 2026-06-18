@@ -18,14 +18,14 @@
             font-family: 'Lexend', sans-serif;
         }
         
-        /* Native App Feel */
+        /* Mobile Screen Optimizations */
         body {
             overscroll-behavior-y: contain;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
 
-        /* Stories-Indicator progress */
+        /* Stories-Indicator progress width transition */
         .story-bar-fill {
             transition: width 0.1s linear;
         }
@@ -42,10 +42,10 @@
 </head>
 <body class="bg-stone-900 text-stone-900 body-font min-h-screen flex flex-col items-center justify-center overflow-hidden">
 
-    <!-- Mobile-First Container (16:9 Aspect ratio simulated on desktop, native on mobile) -->
+    <!-- Mobile-First Container (Full screen on mobile, elegant vertical layout on desktop) -->
     <div class="w-full max-w-md h-[100dvh] bg-stone-950 flex flex-col justify-between relative shadow-2xl overflow-hidden border-x border-stone-800">
         
-        <!-- STORIES PROGRESS BARS (5 Scenes) -->
+        <!-- INSTAGRAM-STYLE STORIES PROGRESS BARS -->
         <div class="absolute top-0 inset-x-0 pt-3 px-4 z-40 flex space-x-1.5 bg-gradient-to-b from-black/85 to-transparent pb-8">
             <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
                 <div id="bar-1" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- TOP NAVIGATION BAR -->
+        <!-- HEADER BRANDING -->
         <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent text-white">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 rounded-full bg-[#E3000F] border border-white flex items-center justify-center font-black text-xs text-white">SPD</div>
@@ -79,30 +79,29 @@
             </button>
         </div>
 
-        <!-- INTERACTIVE GESTURE HOTSPOTS (Left: Previous, Right: Next, Center: Pause) -->
+        <!-- TRANSPARENT TOUCH GESTURE SENSORS -->
         <div class="absolute inset-y-20 inset-x-0 z-30 flex">
-            <!-- Left Tap (25% Width) -->
+            <!-- Left 25% Area -> Back -->
             <div onclick="prevScene()" class="w-[25%] h-full cursor-pointer"></div>
-            <!-- Center Tap (50% Width) -->
+            <!-- Center 50% Area -> Pause/Play Toggle -->
             <div onclick="togglePlay()" class="w-[50%] h-full cursor-pointer flex items-center justify-center">
-                <!-- Large play/pause overlay indicator on action -->
                 <div id="center-play-overlay" class="p-5 bg-black/60 rounded-full text-white backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none scale-90">
                     <i id="center-play-icon" data-lucide="play" class="w-10 h-10 fill-current"></i>
                 </div>
             </div>
-            <!-- Right Tap (25% Width) -->
+            <!-- Right 25% Area -> Next -->
             <div onclick="nextScene()" class="w-[25%] h-full cursor-pointer"></div>
         </div>
 
-        <!-- FULL-SCREEN VISUAL CANVAS (Occupies whole viewport to let motifs stand out) -->
+        <!-- SCENE GRAPHICS CANVAS (Free-standing SVG over full background color) -->
         <div id="visual-stage" class="flex-grow flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fef08a] transition-all duration-700">
             <div id="scene-element-container" class="w-full h-full flex flex-col items-center justify-center text-center scene-active">
-                <!-- SVG Illustrations Rendered Here Dynamically -->
+                <!-- SVGs render here dynamically -->
             </div>
         </div>
 
-        <!-- FLOATING BLACK SUBTITLE BAND (Positioned beautifully over the canvas) -->
-        <div class="absolute bottom-20 inset-x-4 z-40 bg-black/90 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl flex flex-col space-y-2 text-white">
+        <!-- FLOATING BLACK SUBTITLE BAND (Bottom Overlay) -->
+        <div class="absolute bottom-20 inset-x-4 z-40 bg-black/95 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl flex flex-col space-y-2 text-white">
             <div class="flex justify-between items-center w-full">
                 <span id="current-scene-badge" class="bg-[#E3000F] text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
                     Szene 1: Das Dilemma
@@ -114,7 +113,7 @@
             </p>
         </div>
 
-        <!-- BOTTOM CONTROLLER BAR -->
+        <!-- FOOTER CONTROLLER -->
         <div class="px-4 pb-6 pt-3 bg-gradient-to-t from-black to-black/80 z-40 border-t border-white/5 flex justify-between items-center text-white">
             <div class="flex items-center space-x-1.5">
                 <i id="volume-indicator-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-stone-400"></i>
@@ -131,7 +130,7 @@
             </button>
         </div>
 
-        <!-- SETTINGS SLIDE-UP DRAWER (Hidden, Swipeable/Toggleable) -->
+        <!-- AUDIO DIAGNOSTIC SETTINGS DRAWER -->
         <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white overflow-y-auto max-h-[85vh]">
             <div class="flex justify-between items-center mb-4">
                 <h4 class="font-black text-sm uppercase text-white tracking-widest flex items-center">
@@ -143,7 +142,6 @@
                 </button>
             </div>
 
-            <!-- Custom Selector -->
             <div class="mb-4 text-stone-900">
                 <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest block mb-1 text-white">Sprach-Modus:</label>
                 <select id="audio-mode-selector" onchange="changeAudioMode()" class="w-full bg-stone-950 border border-stone-800 text-xs font-bold p-2.5 rounded-xl text-white">
@@ -153,7 +151,7 @@
                 </select>
             </div>
 
-            <!-- Live Diagnostic Logger -->
+            <!-- Server-Diagnostic Output -->
             <div class="mb-4 bg-stone-950 border border-stone-800 rounded-xl p-3">
                 <span class="text-[9px] font-black text-stone-400 uppercase tracking-widest block mb-1.5">Live-Server-Diagnose:</span>
                 <div id="diagnostic-log" class="text-[10px] font-mono space-y-1 text-stone-300 max-h-24 overflow-y-auto">
@@ -161,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- Manual File Upload Grid -->
+            <!-- Upload Fields Grid -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene1.m4a)</span>
@@ -202,30 +200,30 @@
 
     </div>
 
-    <!-- Audio Player Controller Logic -->
+    <!-- Script and Audio logic -->
     <script>
         lucide.createIcons();
 
-        // Gorgeous, clean, and modern representations matching the sketches perfectly without background blocks
+        // Beautiful freestanding vector illustrations without bounding boxes
         const sceneData = {
             1: {
                 badge: "Szene 1: Das Haustür-Dilemma",
                 text: "Im September ist Wahl und wir wissen alle. Wir müssen an die Türen, aber wir wissen auch, es ist nicht jedermanns Sache. Daher wollen wir eine ergänzende Aktion machen bei der jeder mitmachen kann und die Tür zu türaktion damit ideal ergänzt.",
                 color: "#fef08a", // Soft Yellow
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-64 h-64 drop-shadow-md">
-                        <!-- House Facade (Blue Body) -->
+                    <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
+                        <!-- House Facade -->
                         <rect x="25" y="45" width="50" height="40" fill="#38bdf8" stroke="#000000" stroke-width="2.5" rx="3"/>
-                        <!-- Roof (Red) -->
+                        <!-- Roof -->
                         <polygon points="20,45 50,18 80,45" fill="#E3000F" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>
-                        <!-- Dark Grey Door on the LEFT -->
+                        <!-- Dark door on the Left -->
                         <rect x="34" y="60" width="13" height="25" fill="#1e293b" stroke="#000000" stroke-width="2"/>
-                        <!-- Doorbell Plaque on the RIGHT with Red Button -->
+                        <!-- Bell Plaque on the Right -->
                         <rect x="58" y="58" width="6" height="12" fill="#e2e8f0" stroke="#000000" stroke-width="1.5" rx="1"/>
                         <circle cx="61" cy="62" r="1.8" fill="#E3000F"/>
-                        <!-- Hand pointing at the doorbell button -->
+                        <!-- Hand pointing -->
                         <path d="M 83,73 C 76,71 72,66 69,64 L 68,64 L 70,67 C 72,73 76,76 83,76 Z" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Gentle Doorbell alert waves -->
+                        <!-- Doorbell ripples -->
                         <path d="M 72,60 C 74,62 74,66 72,68" fill="none" stroke="#e11d48" stroke-width="1.5" class="animate-ping"/>
                     </svg>
                 `
@@ -235,12 +233,12 @@
                 text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen Beitrag leisten kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
                 color: "#ff8a8a", // Rose Red
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-64 h-64 drop-shadow-md">
-                        <!-- Clean Black Bridge Arc -->
+                    <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
+                        <!-- Bridge Arc -->
                         <path d="M 15,70 Q 50,44 85,70" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
-                        <!-- Big Heart precisely centered above the bridge -->
+                        <!-- Heart -->
                         <path d="M 50,45 C 50,48 45,28 32,33 C 19,38 25,62 50,83 C 75,62 81,38 68,33 C 55,28 50,48 50,45 Z" fill="#E3000F" stroke="#000000" stroke-width="3"/>
-                        <!-- Yellow sparkle dots -->
+                        <!-- Sparkles -->
                         <circle cx="28" cy="20" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
                         <circle cx="72" cy="20" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
                     </svg>
@@ -251,23 +249,23 @@
                 text: "Wie funktioniert es? Hier ist ein ziehwagen bzw. Ein lastenrad und das sind greifzangen und Säcke. Die bekommen wir von der BSR im Rahmen der Richtlinie kehrenbürger. Und das geht ganz einfach. Wir gehen durch den Kiez. Wir sammeln den wilden Müll, ein stellen die Säcke an die Ecke und die BSR holt sie ab. Wir machen das von Juni bis zum Wahltag im September. Einmal die Woche in kleinen Teams von zwei oder drei Leuten je zwei Stunden und wenn der Wahlkampf es erfordert, vielleicht auch zweimal pro Woche.",
                 color: "#fed7aa", // Soft Orange
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-64 h-64">
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
                         <!-- Ground line -->
                         <line x1="10" y1="78" x2="90" y2="78" stroke="#000000" stroke-width="2.5"/>
-                        <!-- Handcart wheels (White with black center) -->
+                        <!-- Cart wheels -->
                         <circle cx="32" cy="72" r="7" fill="#ffffff" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="32" cy="72" r="2" fill="#000000"/>
                         <circle cx="56" cy="72" r="7" fill="#ffffff" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="56" cy="72" r="2" fill="#000000"/>
-                        <!-- Red pulling-cart box -->
+                        <!-- Red Cart box -->
                         <rect x="25" y="48" width="31" height="17" fill="#E3000F" rx="2" stroke="#000000" stroke-width="2.5"/>
                         <!-- Handle -->
                         <line x1="56" y1="58" x2="66" y2="44" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
                         <line x1="66" y1="44" x2="63" y2="38" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Grabber tool graphic pointing towards bag -->
+                        <!-- Grabber tool -->
                         <line x1="66" y1="42" x2="80" y2="33" stroke="#4b5563" stroke-width="2.5" stroke-linecap="round"/>
                         <path d="M 80,31 L 83,33 L 80,35 Z" fill="#E3000F" stroke="#000000" stroke-width="1"/>
-                        <!-- Orange BSR Trash Bag -->
+                        <!-- Orange Trash Bag -->
                         <path d="M 68,78 C 65,58 74,53 79,56 C 84,59 86,70 82,78 Z" fill="#ea580c" stroke="#000000" stroke-width="2.5"/>
                         <path d="M 74,56 L 79,56 L 76,52 Z" fill="#ea580c" stroke="#000000" stroke-width="1.5"/>
                     </svg>
@@ -278,18 +276,17 @@
                 text: "Viele sagen Politik redet doch nur. Mit unserer Aktion drehen wir das um. Wir gehen nicht hin, um zu reden. Wir gehen hin um anzupacken. Man sieht uns in den roten Westen. Sie sehen, dass wir etwas tun. Sauberkeit ist ein zentrales Thema. Das macht die Arbeit einfacher für diejenigen von uns, die danach das Gespräch suchen, also den Tür zu türwahlkampf Das Vergessen sich einfach perfekt, eine saubere Neustart und ein Wahlkampf, bei dem jeder von uns mitmachen kann. Mein Appell an euch. Bitte mitmachen!",
                 color: "#bbf7d0", // Light Green
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-64 h-64">
-                        <!-- Dotted vertical dividing line -->
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Divided vertical line -->
                         <line x1="50" y1="12" x2="50" y2="88" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
-                        <!-- Yellow central connection diamond -->
+                        <!-- Central golden diamond spark -->
                         <polygon points="50,46 54,50 50,54 46,50" fill="#eab308" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Left side: Clean green tree on stem -->
+                        <!-- Left Clean Tree -->
                         <circle cx="28" cy="40" r="13" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
                         <rect x="26" y="40" width="4" height="24" fill="#78350f" stroke="#000000" stroke-width="1.5"/>
                         <path d="M 15,64 Q 28,60 41,64" fill="none" stroke="#22c55e" stroke-width="2.5"/>
-                        <!-- Right side: Door Intercom with smiling screen -->
+                        <!-- Right Intercom Screen -->
                         <rect x="62" y="32" width="22" height="42" fill="#f8fafc" stroke="#334155" stroke-width="2.5" rx="3.5"/>
-                        <!-- Intercom speaker dots -->
                         <circle cx="73" cy="38" r="1" fill="#000"/>
                         <circle cx="69" cy="38" r="1" fill="#000"/>
                         <circle cx="77" cy="38" r="1" fill="#000"/>
@@ -304,22 +301,22 @@
                 text: "Das ergänzt sich einfach perfekt. Eine saubere Neustadt und ein Wahlkampf, bei dem jeder von uns mitmachen kann. Mein Appell an euch, an mich: Bitte mitmachen!",
                 color: "#e2e8f0", // Clean Slate Grey
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-64 h-64">
-                        <!-- Platform Grey Base -->
+                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                        <!-- Base Platform -->
                         <rect x="15" y="62" width="70" height="15" fill="#94a3b8" rx="2" stroke="#000000" stroke-width="2.5"/>
-                        <!-- Three friendly drawn celebrating stick figures -->
-                        <!-- Left stick-man -->
+                        <!-- Three drawn characters celebrating -->
+                        <!-- Left figure -->
                         <circle cx="32" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <line x1="32" y1="49.5" x2="32" y2="62" stroke="#000000" stroke-width="1.8"/>
                         <line x1="32" y1="52" x2="25" y2="44" stroke="#000000" stroke-width="1.5"/>
                         <line x1="32" y1="52" x2="39" y2="44" stroke="#000000" stroke-width="1.5"/>
-                        <!-- Center stick-man with solid red vest -->
+                        <!-- Center figure in Red Vest -->
                         <circle cx="50" cy="41" r="5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <rect x="45" y="46" width="10" height="15" fill="#E3000F" stroke="#000000" stroke-width="1.8" rx="1.5"/>
                         <line x1="45" y1="49" x2="37" y2="38" stroke="#000000" stroke-width="1.8"/>
                         <line x1="55" y1="49" x2="63" y2="38" stroke="#000000" stroke-width="1.8"/>
                         <line x1="50" y1="61" x2="50" y2="63" stroke="#000000" stroke-width="1.8"/>
-                        <!-- Right stick-man -->
+                        <!-- Right figure -->
                         <circle cx="68" cy="45" r="4.5" fill="#fbcfe8" stroke="#000000" stroke-width="1.5"/>
                         <line x1="68" y1="49.5" x2="68" y2="62" stroke="#000000" stroke-width="1.8"/>
                         <line x1="68" y1="52" x2="61" y2="44" stroke="#000000" stroke-width="1.5"/>
@@ -337,12 +334,10 @@
         let activeAudio = null;
         let audioMode = 'auto'; // 'auto', 'm4a', 'speech'
 
-        // Dynamic, robust directory detection for seamless GitHub Pages publishing
         const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         const resolvedBaseUrl = window.location.origin + basePath;
 
-        // Strictly chronological mapping as instructed:
-        // Szene1.m4a maps to Scene 1, Szene2.m4a maps to Scene 2, etc.
+        // Guaranteed chronologic 1-to-1 audio files mapping
         const audioSources = {
             1: resolvedBaseUrl + "Szene1.m4a",
             2: resolvedBaseUrl + "Szene2.m4a",
@@ -360,17 +355,16 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        // Render scene elements (Free standing without the black boxes)
+        // Render current SVG and titles without background grids
         function renderScene(sceneNum) {
             const scene = sceneData[sceneNum];
-            
             const stage = document.getElementById('visual-stage');
             stage.style.backgroundColor = scene.color;
 
             const container = document.getElementById('scene-element-container');
             container.innerHTML = `
                 <div class="scene-active flex flex-col items-center">
-                    <h4 class="maus-font text-stone-900 text-lg uppercase tracking-wider mb-4 opacity-80">
+                    <h4 class="maus-font text-stone-900 text-lg uppercase tracking-wider mb-4 opacity-85">
                         ${scene.badge.split(":")[1].trim()}
                     </h4>
                     <div class="flex justify-center">
@@ -379,12 +373,12 @@
                 </div>
             `;
 
-            // Update bottom captions and title
+            // Subtitle text updates in the black bottom ribbon
             document.getElementById('caption-text').innerText = scene.text;
             document.getElementById('current-scene-badge').innerText = scene.badge;
             document.getElementById('current-scene-num').innerText = `${sceneNum} / 5`;
 
-            // Reset and paint progress bars
+            // Render top bar steps
             for (let i = 1; i <= 5; i++) {
                 const bar = document.getElementById(`bar-${i}`);
                 if (i < sceneNum) {
@@ -395,7 +389,7 @@
             }
         }
 
-        // Network check with fallback for dual spacing naming conventions (e.g. "Szene1.m4a" vs "Szene 1.m4a")
+        // Web Check function for local server and GitHub Pages path mapping
         async function checkLocalAudioFiles() {
             addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
             
@@ -407,10 +401,10 @@
                 try {
                     let response = await fetch(url, { method: 'HEAD' }).catch(() => fetch(url, { method: 'GET' }));
                     
-                    // Fallback to check filename with space "Szene i.m4a"
+                    // Space fallback check if direct filename lacks spacing
                     if (!response.ok) {
                         const spaceUrl = resolvedBaseUrl + `Szene%20${i}.m4a`;
-                        response = await fetch(url, { method: 'HEAD' }).catch(() => fetch(url, { method: 'GET' }));
+                        response = await fetch(spaceUrl, { method: 'HEAD' }).catch(() => fetch(spaceUrl, { method: 'GET' }));
                         if (response.ok) {
                             audioSources[i] = spaceUrl;
                             filename = `Szene ${i}.m4a`;
@@ -426,7 +420,7 @@
                     }
                 } catch (e) {
                     audioFilesStatus[i] = false;
-                    addDiagnosticMsg(`✗ Szene ${i}: Nicht am Server gefunden.`, "error");
+                    addDiagnosticMsg(`✗ Szene ${i}: Nicht gefunden. (Vorlese-Stimme aktiv)`, "error");
                     updateFileBadgeUI(i, false);
                 }
 
@@ -436,7 +430,6 @@
             }
         }
 
-        // Update indicators inside settings drawer
         function updateFileBadgeUI(sceneNum, isPresent) {
             const badge = document.getElementById(`badge-auto-${sceneNum}`);
             if (isPresent) {
@@ -464,7 +457,6 @@
             }
         }
 
-        // Initialize Audio player
         function initAudio(sceneNum, autoPlay = false) {
             stopAllPlayback();
 
@@ -509,7 +501,6 @@
             }
         }
 
-        // Web Speech Fallback
         let speechSynth = window.speechSynthesis;
         let speechUtterance = null;
         let fallbackInterval = null;
@@ -527,7 +518,6 @@
                 isPlaying = true;
                 updatePlayButtonState();
                 
-                // Simulate story progress bar filling for speech synthesis
                 let durationEstimateMs = textToSpeak.length * 68;
                 let startTime = Date.now();
                 
@@ -547,7 +537,6 @@
             speechSynth.speak(speechUtterance);
         }
 
-        // Navigation flow
         function handleTrackEnded() {
             if (currentScene < 5) {
                 jumpToScene(currentScene + 1, true);
@@ -598,14 +587,12 @@
                 stopAllPlayback();
                 isPlaying = false;
                 
-                // Show visual feedback on screen
                 overlayIcon.setAttribute('data-lucide', 'play');
                 overlay.style.opacity = '1';
                 setTimeout(() => { overlay.style.opacity = '0'; }, 600);
             } else {
                 initAudio(currentScene, true);
                 
-                // Show play indicator flash
                 overlayIcon.setAttribute('data-lucide', 'pause');
                 overlay.style.opacity = '1';
                 setTimeout(() => { overlay.style.opacity = '0'; }, 600);
@@ -624,7 +611,6 @@
             lucide.createIcons();
         }
 
-        // Drawer Setup
         function toggleSettingsDrawer() {
             const drawer = document.getElementById('settings-drawer');
             drawer.classList.toggle('translate-y-full');
@@ -635,7 +621,6 @@
             initAudio(currentScene, isPlaying);
         }
 
-        // Local Voice File Uploader Integration
         function uploadAudio(event, sceneNum) {
             const file = event.target.files[0];
             if (file) {
@@ -643,7 +628,6 @@
                 audioSources[sceneNum] = url;
                 audioFilesStatus[sceneNum] = true;
                 
-                // visual validation on label
                 const label = document.getElementById(`btn-file-${sceneNum}`);
                 label.innerText = "GELADEN ✓";
                 label.classList.remove('bg-stone-800');
@@ -658,7 +642,6 @@
             }
         }
 
-        // Outro Sound Engine for "Sendung mit der Maus"
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playMausPlingPling() {
             if (audioCtx.state === 'suspended') {
@@ -689,7 +672,6 @@
             }, 100);
         }
 
-        // Load First Slide automatically
         window.onload = async function() {
             renderScene(1);
             await checkLocalAudioFiles();
