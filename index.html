@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Kiez-Story: Die SPD räumt auf!</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Lexend:wght@300;400;600;800;900&display=swap');
@@ -16,7 +18,7 @@
             font-family: 'Lexend', sans-serif;
         }
         
-        /* Mobile App Settings */
+        /* Mobile App Viewport Settings */
         body {
             overscroll-behavior-y: contain;
             -webkit-tap-highlight-color: transparent;
@@ -38,8 +40,10 @@
 </head>
 <body class="bg-stone-900 text-stone-900 body-font min-h-screen flex flex-col items-center justify-center overflow-hidden">
 
+    <!-- Mobile Container (Fits 100% viewport) -->
     <div class="w-full max-w-md h-[100dvh] bg-stone-950 flex flex-col justify-between relative shadow-2xl overflow-hidden border-x border-stone-800">
         
+        <!-- STORIES PROGRESS BARS -->
         <div class="absolute top-0 inset-x-0 pt-3 px-4 z-40 flex space-x-1.5 bg-gradient-to-b from-black/85 to-transparent pb-8">
             <div class="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
                 <div id="bar-1" class="story-bar-fill h-full bg-[#E3000F] w-0"></div>
@@ -58,6 +62,7 @@
             </div>
         </div>
 
+        <!-- HEADER BRANDING -->
         <div class="absolute top-6 inset-x-0 px-4 py-2 z-40 flex justify-between items-center bg-gradient-to-b from-black/40 to-transparent text-white">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 rounded-full bg-[#E3000F] border border-white flex items-center justify-center font-black text-xs text-white">SPD</div>
@@ -72,33 +77,28 @@
             </button>
         </div>
 
+        <!-- GESTURE INTERACTIVE HOTSPOTS -->
         <div class="absolute inset-y-20 inset-x-0 z-30 flex">
+            <!-- Left 25% Area -> Back -->
             <div onclick="prevScene()" class="w-[25%] h-full cursor-pointer"></div>
+            <!-- Center 50% Area -> Play/Pause Toggle -->
             <div onclick="togglePlay()" class="w-[50%] h-full cursor-pointer flex items-center justify-center">
                 <div id="center-play-overlay" class="p-5 bg-black/60 rounded-full text-white backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none scale-90">
                     <i id="center-play-icon" data-lucide="play" class="w-10 h-10 fill-current"></i>
                 </div>
             </div>
+            <!-- Right 25% Area -> Next -->
             <div onclick="nextScene()" class="w-[25%] h-full cursor-pointer"></div>
         </div>
 
+        <!-- MAIN GRAPHICS CONTAINER (Free-standing SVG over full background color) -->
         <div id="visual-stage" class="flex-grow flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fef08a] transition-all duration-700">
             <div id="scene-element-container" class="w-full h-full flex flex-col items-center justify-center text-center scene-active">
-                </div>
-        </div>
-
-        <div class="absolute bottom-20 inset-x-4 z-40 bg-black/95 backdrop-blur-md rounded-2xl border border-white/10 p-4 shadow-2xl flex flex-col space-y-2 text-white">
-            <div class="flex justify-between items-center w-full">
-                <span id="current-scene-badge" class="bg-[#E3000F] text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                    Szene 1: Das Dilemma
-                </span>
-                <span id="current-scene-num" class="text-stone-400 text-[10px] font-bold">1 / 5</span>
+                <!-- SVG-Illustration Rendered Here -->
             </div>
-            <p id="caption-text" class="text-sm font-semibold leading-relaxed text-stone-100 tracking-wide">
-                Prüfe Audio-Dateien...
-            </p>
         </div>
 
+        <!-- BOTTOM CONTROLLER BAR -->
         <div class="px-4 pb-6 pt-3 bg-gradient-to-t from-black to-black/80 z-40 border-t border-white/5 flex justify-between items-center text-white">
             <div class="flex items-center space-x-1.5">
                 <i id="volume-indicator-icon" data-lucide="volume-2" class="w-3.5 h-3.5 text-stone-400"></i>
@@ -110,11 +110,12 @@
             </button>
 
             <button onclick="toggleSettingsDrawer()" class="text-stone-400 hover:text-white flex items-center space-x-1">
-                <span class="text-[9px] font-black tracking-widest uppercase">STIMMEN-CHECK</span>
+                <span class="text-[9px] font-black tracking-widest uppercase font-mono" id="current-scene-counter">1 / 5</span>
                 <i data-lucide="chevron-up" class="w-3 h-3"></i>
             </button>
         </div>
 
+        <!-- AUDIO SETTINGS DRAWER -->
         <div id="settings-drawer" class="absolute inset-x-0 bottom-0 bg-stone-900 border-t-4 border-[#E3000F] rounded-t-[32px] p-6 z-50 transition-transform duration-500 transform translate-y-full shadow-2xl text-white overflow-y-auto max-h-[85vh]">
             <div class="flex justify-between items-center mb-4">
                 <h4 class="font-black text-sm uppercase text-white tracking-widest flex items-center">
@@ -126,15 +127,7 @@
                 </button>
             </div>
 
-            <div class="mb-4 text-stone-900">
-                <label class="text-[10px] font-black text-stone-400 uppercase tracking-widest block mb-1 text-white">Sprach-Modus:</label>
-                <select id="audio-mode-selector" onchange="changeAudioMode()" class="w-full bg-stone-950 border border-stone-800 text-xs font-bold p-2.5 rounded-xl text-white">
-                    <option value="auto">Automatische Erkennung (Empfohlen)</option>
-                    <option value="m4a">Ausschließlich deine m4a-Stimmen</option>
-                    <option value="speech">Ausschließlich Vorlesestimme (Synthetisch)</option>
-                </select>
-            </div>
-
+            <!-- Server-Diagnostic Output -->
             <div class="mb-4 bg-stone-950 border border-stone-800 rounded-xl p-3">
                 <span class="text-[9px] font-black text-stone-400 uppercase tracking-widest block mb-1.5">Live-Server-Diagnose:</span>
                 <div id="diagnostic-log" class="text-[10px] font-mono space-y-1 text-stone-300 max-h-24 overflow-y-auto">
@@ -142,6 +135,7 @@
                 </div>
             </div>
 
+            <!-- Manual Upload Selection -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
                     <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene1.m4a)</span>
@@ -176,22 +170,22 @@
             </div>
 
             <button onclick="toggleSettingsDrawer()" class="w-full bg-[#E3000F] hover:bg-red-700 text-white font-extrabold text-xs py-2.5 rounded-xl uppercase tracking-widest transition">
-                Speichern &amp; Zurück
+                Schließen
             </button>
         </div>
 
     </div>
 
+    <!-- Script and Audio logic -->
     <script>
         lucide.createIcons();
 
-        // Freestanding clean SVG drawings with no internal text tags or black blocks
+        // 5 Scenes with ONLY vector graphics and colors. No text fields!
         const sceneData = {
             1: {
-                badge: "Szene 1: Das Haustür-Dilemma",
                 color: "#fef08a", // Soft Yellow
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
+                    <svg viewBox="0 0 100 100" class="w-64 h-64 drop-shadow-md">
                         <rect x="25" y="45" width="50" height="40" fill="#38bdf8" stroke="#000000" stroke-width="2.5" rx="3"/>
                         <polygon points="20,45 50,18 80,45" fill="#E3000F" stroke="#000000" stroke-width="2.5" stroke-linejoin="round"/>
                         <rect x="34" y="60" width="13" height="25" fill="#1e293b" stroke="#000000" stroke-width="2"/>
@@ -203,10 +197,9 @@
                 `
             },
             2: {
-                badge: "Szene 2: Die Brücke",
                 color: "#ff8a8a", // Rose Red
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
+                    <svg viewBox="0 0 100 100" class="w-64 h-64 drop-shadow-md">
                         <path d="M 15,70 Q 50,44 85,70" fill="none" stroke="#000000" stroke-width="4.5" stroke-linecap="round"/>
                         <path d="M 50,45 C 50,48 45,28 32,33 C 19,38 25,62 50,83 C 75,62 81,38 68,33 C 55,28 50,48 50,45 Z" fill="#E3000F" stroke="#000000" stroke-width="3"/>
                         <circle cx="28" cy="20" r="2.5" fill="#eab308" stroke="#000000" stroke-width="0.5"/>
@@ -215,10 +208,9 @@
                 `
             },
             3: {
-                badge: "Szene 3: Die Logistik",
                 color: "#fed7aa", // Soft Orange
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                    <svg viewBox="0 0 100 100" class="w-64 h-64">
                         <line x1="10" y1="78" x2="90" y2="78" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="32" cy="72" r="7" fill="#ffffff" stroke="#000000" stroke-width="2.5"/>
                         <circle cx="32" cy="72" r="2" fill="#000000"/>
@@ -235,10 +227,9 @@
                 `
             },
             4: {
-                badge: "Szene 4: Die Psychologie",
                 color: "#bbf7d0", // Light Green
                 svg: `
-                    <svg viewBox="0 0 100 100" class="w-56 h-56">
+                    <svg viewBox="0 0 100 100" class="w-64 h-64">
                         <line x1="50" y1="12" x2="50" y2="88" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3"/>
                         <polygon points="50,46 54,50 50,54 46,50" fill="#eab308" stroke="#000000" stroke-width="1.5"/>
                         <circle cx="28" cy="40" r="13" fill="#22c55e" stroke="#16a34a" stroke-width="2.5"/>
@@ -254,7 +245,6 @@
                 `
             },
             5: {
-                badge: "Szene 5: Outro & Mobilisierung",
                 color: "#e2e8f0", // Clean Slate Grey
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56">
@@ -282,12 +272,12 @@
         let isPlaying = false;
         let currentScene = 1;
         let activeAudio = null;
-        let audioMode = 'auto'; // 'auto', 'm4a', 'speech'
+        let fallbackTimer = null;
 
         const basePath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
         const resolvedBaseUrl = window.location.origin + basePath;
 
-        // Strictly chronological mapping (1-to-1)
+        // Guaranteed chronologic 1-to-1 audio files mapping
         const audioSources = {
             1: resolvedBaseUrl + "Szene1.m4a",
             2: resolvedBaseUrl + "Szene2.m4a",
@@ -305,7 +295,7 @@
             logBox.scrollTop = logBox.scrollHeight;
         }
 
-        // Render current freestanding vector drawing
+        // Render current SVG centered on stage
         function renderScene(sceneNum) {
             const scene = sceneData[sceneNum];
             const stage = document.getElementById('visual-stage');
@@ -314,21 +304,16 @@
             const container = document.getElementById('scene-element-container');
             container.innerHTML = `
                 <div class="scene-active flex flex-col items-center">
-                    <h4 class="maus-font text-stone-900 text-lg uppercase tracking-wider mb-4 opacity-85">
-                        ${scene.badge.split(":")[1].trim()}
-                    </h4>
                     <div class="flex justify-center">
                         ${scene.svg}
                     </div>
                 </div>
             `;
 
-            // Subtitle ribbon update
-            document.getElementById('caption-text').innerText = scene.text;
-            document.getElementById('current-scene-badge').innerText = scene.badge;
-            document.getElementById('current-scene-num').innerText = `${sceneNum} / 5`;
+            // Update UI elements
+            document.getElementById('current-scene-counter').innerText = `${sceneNum} / 5`;
 
-            // Render bars
+            // Reset and paint progress bars
             for (let i = 1; i <= 5; i++) {
                 const bar = document.getElementById(`bar-${i}`);
                 if (i < sceneNum) {
@@ -339,7 +324,7 @@
             }
         }
 
-        // Network loader checking both condensed and space naming conventions
+        // Check local audio files on GitHub server
         async function checkLocalAudioFiles() {
             addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
             
@@ -370,7 +355,7 @@
                     }
                 } catch (e) {
                     audioFilesStatus[i] = false;
-                    addDiagnosticMsg(`✗ Szene ${i}: Nicht gefunden. (Vorlese-Stimme aktiv)`, "error");
+                    addDiagnosticMsg(`✗ Szene ${i}: Nicht gefunden. (Standard-Timer aktiv)`, "error");
                     updateFileBadgeUI(i, false);
                 }
 
@@ -387,7 +372,7 @@
                 badge.className = "text-[8px] block font-black text-green-500 uppercase mt-0.5";
                 document.getElementById('settings-alert-dot').classList.remove('hidden');
             } else {
-                badge.innerText = "VORLESEN 💬";
+                badge.innerText = "TIMER ⏱";
                 badge.className = "text-[8px] block font-bold text-stone-500 uppercase mt-0.5";
             }
         }
@@ -397,11 +382,11 @@
             const icon = document.getElementById('volume-indicator-icon');
             
             if (isChristianStimme) {
-                badge.innerText = "STIMME: CHRISTIAN (AKTIV)";
+                badge.innerText = "STIMME: GELADEN";
                 badge.className = "text-[9px] text-green-400 font-black uppercase tracking-wider";
                 icon.className = "w-3.5 h-3.5 text-green-400";
             } else {
-                badge.innerText = "STIMME: AUTOMATISCH";
+                badge.innerText = "MODUS: TIMER-DIASHOW";
                 badge.className = "text-[9px] text-stone-400 font-bold uppercase tracking-wider";
                 icon.className = "w-3.5 h-3.5 text-stone-400";
             }
@@ -411,9 +396,8 @@
             stopAllPlayback();
 
             const localFileExists = audioFilesStatus[sceneNum];
-            const useM4a = (audioMode === 'm4a') || (audioMode === 'auto' && localFileExists);
 
-            if (useM4a) {
+            if (localFileExists) {
                 const src = audioSources[sceneNum];
                 activeAudio = new Audio(src);
                 updateActiveBadgeUI(true);
@@ -429,62 +413,46 @@
                     handleTrackEnded();
                 });
 
-                activeAudio.addEventListener('error', (e) => {
-                    console.warn("m4a audio error, falling back to WebSpeech: ", e);
-                    triggerSpeechFallback(sceneNum);
+                activeAudio.addEventListener('error', () => {
+                    startFallbackTimer(sceneNum);
                 });
 
                 if (autoPlay) {
                     activeAudio.play().then(() => {
                         isPlaying = true;
                         updatePlayButtonState();
-                    }).catch((e) => {
-                        console.log("Play failed: ", e);
-                        triggerSpeechFallback(sceneNum);
+                    }).catch(() => {
+                        startFallbackTimer(sceneNum);
                     });
                 }
             } else {
                 updateActiveBadgeUI(false);
                 if (autoPlay) {
-                    triggerSpeechFallback(sceneNum);
+                    startFallbackTimer(sceneNum);
                 }
             }
         }
 
-        let speechSynth = window.speechSynthesis;
-        let speechUtterance = null;
-        let fallbackInterval = null;
-
-        function triggerSpeechFallback(sceneNum) {
+        // Silent Fallback Timer for scenes without active audio files
+        function startFallbackTimer(sceneNum) {
             stopAllPlayback();
-            updateActiveBadgeUI(false);
+            isPlaying = true;
+            updatePlayButtonState();
 
-            const textToSpeak = sceneData[sceneNum].text;
-            speechUtterance = new SpeechSynthesisUtterance(textToSpeak);
-            speechUtterance.lang = 'de-DE';
-            speechUtterance.rate = 1.05;
-
-            speechUtterance.onstart = () => {
-                isPlaying = true;
-                updatePlayButtonState();
+            let durationMs = 5000; // 5-second automatic slide transition
+            let startTime = Date.now();
+            
+            clearInterval(fallbackTimer);
+            fallbackTimer = setInterval(() => {
+                let elapsed = Date.now() - startTime;
+                let pct = Math.min((elapsed / durationMs) * 100, 100);
+                document.getElementById(`bar-${sceneNum}`).style.width = `${pct}%`;
                 
-                let durationEstimateMs = textToSpeak.length * 68;
-                let startTime = Date.now();
-                
-                clearInterval(fallbackInterval);
-                fallbackInterval = setInterval(() => {
-                    let elapsed = Date.now() - startTime;
-                    let pct = Math.min((elapsed / durationEstimateMs) * 100, 100);
-                    document.getElementById(`bar-${sceneNum}`).style.width = `${pct}%`;
-                }, 100);
-            };
-
-            speechUtterance.onend = () => {
-                clearInterval(fallbackInterval);
-                handleTrackEnded();
-            };
-
-            speechSynth.speak(speechUtterance);
+                if (pct >= 100) {
+                    clearInterval(fallbackTimer);
+                    handleTrackEnded();
+                }
+            }, 50);
         }
 
         function handleTrackEnded() {
@@ -499,13 +467,10 @@
         }
 
         function stopAllPlayback() {
-            clearInterval(fallbackInterval);
+            clearInterval(fallbackTimer);
             if (activeAudio) {
                 activeAudio.pause();
                 activeAudio = null;
-            }
-            if (speechSynth && speechSynth.speaking) {
-                speechSynth.cancel();
             }
         }
 
