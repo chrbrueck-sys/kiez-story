@@ -83,7 +83,7 @@
         <div class="absolute inset-y-20 inset-x-0 z-30 flex">
             <!-- Left 25% Area -> Back -->
             <div onclick="prevScene()" class="w-[25%] h-full cursor-pointer"></div>
-            <!-- Center 50% Area -> Pause/Play Toggle -->
+            <!-- Center 50% Area -> Play/Pause Toggle -->
             <div onclick="togglePlay()" class="w-[50%] h-full cursor-pointer flex items-center justify-center">
                 <div id="center-play-overlay" class="p-5 bg-black/60 rounded-full text-white backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none scale-90">
                     <i id="center-play-icon" data-lucide="play" class="w-10 h-10 fill-current"></i>
@@ -230,7 +230,7 @@
             },
             2: {
                 badge: "Szene 2: Die Brücke",
-                text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen Beitrag leisten kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
+                text: "Wir wollen auch die motivieren, die sich bei Tür zu Tür schwer tun. Wir wollen, dass jeder von uns einen beigeleisteten Beitrag erbringen kann, der seinen Möglichkeiten entspricht, und deshalb machen wir neben dem haustürwahlkampf etwas Neues etwas praktisches Wir räumen auf Sauberkeit. Ist ein zentrales Thema?",
                 color: "#ff8a8a", // Rose Red
                 svg: `
                     <svg viewBox="0 0 100 100" class="w-56 h-56 drop-shadow-md">
@@ -559,6 +559,7 @@
             }
         }
 
+        // Explicitly load scene & corresponding chronological audio directly
         function jumpToScene(sceneNum, autoPlay = false) {
             currentScene = sceneNum;
             renderScene(sceneNum);
@@ -616,6 +617,7 @@
             drawer.classList.toggle('translate-y-full');
         }
 
+        // Force reload with explicit configuration
         function changeAudioMode() {
             audioMode = document.getElementById('audio-mode-selector').value;
             initAudio(currentScene, isPlaying);
