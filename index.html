@@ -91,7 +91,7 @@
             <div onclick="nextScene()" class="w-[25%] h-full cursor-pointer"></div>
         </div>
 
-        <!-- MAIN GRAPHICS CANVAS (Completely free-standing vector illustrations) -->
+        <!-- MAIN GRAPHICS CONTAINER (Completely free-standing vector illustrations) -->
         <div id="visual-stage" class="flex-grow flex flex-col items-center justify-center p-4 relative overflow-hidden bg-[#fef08a] transition-all duration-700">
             <div id="scene-element-container" class="w-full h-full flex flex-col items-center justify-center text-center scene-active">
                 <!-- SVG-Illustration Rendered Here Dynamically -->
@@ -138,13 +138,13 @@
             <!-- Manual Upload Selection -->
             <div class="grid grid-cols-2 gap-2 mb-4 text-stone-200">
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
-                    <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene1.m4a)</span>
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 1 (Szene5.m4a)</span>
                     <span id="badge-auto-1" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-1" onchange="uploadAudio(event, 1)" class="hidden">
                     <label id="btn-file-1" for="file-1" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
-                    <span class="text-[9px] text-stone-400 font-bold block">Szene 2 (Szene2.m4a)</span>
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 2 (Szene4.m4a)</span>
                     <span id="badge-auto-2" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-2" onchange="uploadAudio(event, 2)" class="hidden">
                     <label id="btn-file-2" for="file-2" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
@@ -156,13 +156,13 @@
                     <label id="btn-file-3" for="file-3" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative">
-                    <span class="text-[9px] text-stone-400 font-bold block">Szene 4 (Szene4.m4a)</span>
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 4 (Szene2.m4a)</span>
                     <span id="badge-auto-4" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-4" onchange="uploadAudio(event, 4)" class="hidden">
                     <label id="btn-file-4" for="file-4" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
                 </div>
                 <div class="bg-stone-950 p-2 rounded-xl border border-stone-800 text-center relative col-span-2">
-                    <span class="text-[9px] text-stone-400 font-bold block">Szene 5 (Szene5.m4a)</span>
+                    <span class="text-[9px] text-stone-400 font-bold block">Szene 5 (Szene1.m4a)</span>
                     <span id="badge-auto-5" class="text-[8px] block font-black text-amber-500 uppercase mt-0.5">Prüfe...</span>
                     <input type="file" accept="audio/*" id="file-5" onchange="uploadAudio(event, 5)" class="hidden">
                     <label id="btn-file-5" for="file-5" class="mt-1.5 inline-block text-[9px] bg-stone-800 hover:bg-[#E3000F] text-white px-2 py-0.5 rounded cursor-pointer font-bold uppercase transition">Ersetzen</label>
@@ -278,12 +278,18 @@
         const resolvedBaseUrl = window.location.origin + basePath;
 
         // FIXED CHRONOLOGIC 1-TO-1 AUDIO CORRECTION
+        // Christian, hier binden wir deine echten Audiodateien exakt chronologisch ein:
+        // Szene 1 (Haus) spielt deine erste Aufnahme: Szene5.m4a
+        // Szene 2 (Brücke) spielt deine zweite Aufnahme: Szene4.m4a
+        // Szene 3 (Wagen) spielt deine dritte Aufnahme: Szene3.m4a
+        // Szene 4 (Psychologie) spielt deine vierte Aufnahme: Szene2.m4a
+        // Szene 5 (Genossen) spielt deine fünfte Aufnahme: Szene1.m4a
         const audioSources = {
-            1: resolvedBaseUrl + "Szene1.m4a",
-            2: resolvedBaseUrl + "Szene2.m4a",
+            1: resolvedBaseUrl + "Szene5.m4a",
+            2: resolvedBaseUrl + "Szene4.m4a",
             3: resolvedBaseUrl + "Szene3.m4a",
-            4: resolvedBaseUrl + "Szene4.m4a",
-            5: resolvedBaseUrl + "Szene5.m4a"
+            4: resolvedBaseUrl + "Szene2.m4a",
+            5: resolvedBaseUrl + "Szene1.m4a"
         };
 
         const audioFilesStatus = { 1: false, 2: false, 3: false, 4: false, 5: false };
@@ -328,21 +334,30 @@
         async function checkLocalAudioFiles() {
             addDiagnosticMsg("Ermittle Ordner-Adresse: " + resolvedBaseUrl);
             
+            const fileMappingInfo = {
+                1: "Szene5.m4a (Erste Rede)",
+                2: "Szene4.m4a (Zweite Rede)",
+                3: "Szene3.m4a (Dritte Rede)",
+                4: "Szene2.m4a (Vierte Rede)",
+                5: "Szene1.m4a (Fünfte Rede)"
+            };
+
             for (let i = 1; i <= 5; i++) {
                 let url = audioSources[i];
-                let filename = `Szene${i}.m4a`;
-                addDiagnosticMsg(`Prüfe Datei: "${filename}"...`);
+                let filename = fileMappingInfo[i].split(" ")[0];
+                addDiagnosticMsg(`Prüfe Datei: "${filename}" für Szene ${i}...`);
                 
                 try {
                     let response = await fetch(url, { method: 'HEAD' }).catch(() => fetch(url, { method: 'GET' }));
                     
                     // Space-Check fallback
                     if (!response.ok) {
-                        const spaceUrl = resolvedBaseUrl + `Szene%20${i}.m4a`;
+                        const spaceName = filename.replace("Szene", "Szene ");
+                        const spaceUrl = resolvedBaseUrl + encodeURIComponent(spaceName);
                         response = await fetch(spaceUrl, { method: 'HEAD' }).catch(() => fetch(spaceUrl, { method: 'GET' }));
                         if (response.ok) {
                             audioSources[i] = spaceUrl;
-                            filename = `Szene ${i}.m4a`;
+                            filename = spaceName;
                         }
                     }
 
@@ -494,6 +509,7 @@
             }
         }
 
+        // Toggle Play / Pause with visual indicator
         function togglePlay() {
             const overlay = document.getElementById('center-play-overlay');
             const overlayIcon = document.getElementById('center-play-icon');
